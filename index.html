@@ -136,7 +136,7 @@ header{padding-top:env(safe-area-inset-top)}nav{padding-bottom:env(safe-area-ins
 </style>
 </head>
 <body>
-<script>window.onerror=function(m,u,l,c){ try{
+<script>window.onerror=function(m,u,l,c){ if(/^Script error\.?$/.test(String(m))&&!l) return; try{
  var d=document.getElementById('jserr'); if(!d){ d=document.createElement('div'); d.id='jserr'; d.style.cssText='position:fixed;left:0;right:0;top:0;z-index:999;background:#b3261e;color:#fff;font:12px/1.4 monospace;padding:8px 12px;white-space:pre-wrap;word-break:break-all;max-height:70vh;overflow:auto'; document.body.appendChild(d); }
  var NL=String.fromCharCode(10), out='Page error: '+m+' (doc line '+l+', col '+c+').'+NL;
  var sc=document.scripts, k, best='', t;
@@ -193,7 +193,7 @@ header{padding-top:env(safe-area-inset-top)}nav{padding-bottom:env(safe-area-ins
 <div class="ov" id="ov"><div class="sheet" id="sheet"></div></div>
 <footer id="foot"></footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="chart.umd.min.js"></script>
 <script>
 const $ = id => document.getElementById(id);
 function boot(D){
