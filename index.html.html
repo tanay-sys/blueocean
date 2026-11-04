@@ -1,0 +1,1284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>BlueOcean</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<meta name="theme-color" content="#0f4c75">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="BlueOcean">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+:root{
+  --bg:#f3f6f9;--card:#fff;--ink:#14212e;--muted:#64748b;--line:#e3e9f0;
+  --th:#f8fafc;--cur:#eff6ff;--hdr:#0f4c75;--bo:#2b7bb9;--eco:#334155;--std:#d97706;--good:#2e7d32;--bad:#c0392b;--accent:#0f4c75;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:var(--hdr);color:#fff;padding:9px 18px}
+header .row{max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;gap:4px 24px;align-items:baseline;justify-content:space-between}
+header h1{margin:0;font-size:16px;font-weight:650;display:flex;align-items:center;gap:10px}
+.hlogo{background:#fff;border-radius:9px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex:none}.hlogo img{width:26px;height:26px;display:block}
+header .meta{font-size:12px;opacity:.92}
+nav{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+nav .row{max-width:1280px;margin:0 auto;display:flex;gap:2px;overflow-x:auto;padding:0 10px}
+nav button{border:0;background:none;padding:10px 16px;font:inherit;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+nav button.on{color:var(--accent);border-bottom-color:var(--accent)}
+main{max-width:1280px;margin:0 auto;padding:14px 12px 30px}
+section{display:none}section.on{display:block}
+.grid{display:grid;gap:12px}
+.g4{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g2{grid-template-columns:repeat(auto-fit,minmax(380px,1fr))}
+.c2{grid-template-columns:1fr 1fr}
+.card{overflow-x:auto}
+@media(max-width:700px){.g2,.g3,.c2{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 15px}
+.card h3{margin:0 0 6px;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.sub{font-size:12px;color:var(--muted);margin:0 0 6px}
+.gc{display:flex;gap:12px;align-items:center}
+.gc .dn{position:relative;width:104px;height:104px;flex:none}
+.gc .tx{min-width:0}
+.big{font-size:25px;font-weight:700;line-height:1.1}
+.big small{font-size:13px;font-weight:500;color:var(--muted);margin-left:3px}
+.d{font-size:12.5px}
+.two{display:flex;gap:10px}
+.two>div{flex:1;text-align:center}
+.two .dn{position:relative;width:92px;height:92px;margin:0 auto}
+.two .l{font-size:12px;font-weight:600;margin-top:2px}
+.two .s{font-size:11.5px;color:var(--muted)}
+.good{color:var(--good)}.bad{color:var(--bad)}.mut{color:var(--muted)}.amb{color:#b45309}
+.chd{position:relative;height:230px}
+.chd.t{height:300px}
+h2{font-size:14px;margin:18px 0 8px;color:var(--accent)}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{padding:6px 9px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{background:var(--th);font-weight:650;color:var(--muted)}
+th:first-child,td:first-child,td.l,th.l{text-align:left}
+td.bt{min-width:84px}
+tr.cur td{font-weight:700;background:var(--cur)}
+tr.tot td{font-weight:700;border-top:2px solid var(--line);background:var(--th)}
+td.rm{white-space:normal;text-align:left;min-width:160px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.dot.g{background:var(--good)}.dot.r{background:var(--bad)}.dot.a{background:#f59e0b}.dot.n{background:#cbd5e1}
+.chip{display:inline-block;padding:3px 10px;margin:2px 4px 2px 0;border-radius:14px;font-size:12px;font-weight:600;background:#fdecea;color:var(--bad)}
+.chip.g{background:#e8f5e9;color:var(--good)}.chip.a{background:#fff4dc;color:#b45309}
+.note{font-size:12px;color:var(--muted);background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 12px;margin:10px 0}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:10px}
+.seg button{border:0;background:var(--card);padding:6px 14px;font:inherit;font-weight:600;color:var(--muted);cursor:pointer}
+.seg button.on{background:var(--accent);color:#fff}
+.sect{background:#f8fafc;font-weight:700;color:var(--accent)}
+.scroll{overflow:auto;max-height:340px;border:1px solid var(--line);border-radius:8px}
+footer{max-width:1280px;margin:0 auto;padding:0 12px 24px;color:var(--muted);font-size:11.5px}
+@media print{nav{display:none}section{display:block!important;page-break-inside:avoid}}
+#lock{position:fixed;inset:0;z-index:99;background:linear-gradient(180deg,#071f36,#0f4c75);display:flex;align-items:center;justify-content:center;padding:20px;color:#fff}
+#lock .box{width:100%;max-width:340px}
+#lock .lgc{background:#fff;border-radius:14px;padding:12px 16px;margin:0 auto 20px;width:270px}
+#lock .lgc img{width:100%;display:block}
+#lock .lg{width:64px;height:64px;border-radius:16px;background:#071f36;border:2px solid #3b8fd0;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;margin:0 auto 14px}
+#lock h2{color:#fff;text-align:center;margin:0 0 4px;font-size:20px}
+#lock p{text-align:center;margin:0 0 26px;font-size:12.5px;opacity:.75}
+#lock label{font-size:12px;opacity:.8;display:block}
+#lock input{width:100%;background:#ffffff1f;border:1px solid #ffffff55;border-radius:10px;padding:12px;margin:5px 0 14px;font:inherit;font-size:15px;color:#fff;outline:0}
+#lock input:focus{border-color:#7cc3f5}
+#lock button{width:100%;background:#2b9bf0;border:0;border-radius:10px;padding:13px;font:inherit;font-weight:700;color:#fff;font-size:15px;cursor:pointer}
+#lock button:disabled{opacity:.6}
+#lock .err{color:#ffb4a8;font-size:12.5px;min-height:18px;margin:0 0 8px;text-align:center}
+#lock .n{text-align:center;font-size:11.5px;opacity:.6;margin-top:14px}
+body.dark{--bg:#0b1722;--card:#12212f;--ink:#e6edf3;--muted:#9db0c2;--line:#233648;--accent:#6bb8f0;--th:#182b3b;--cur:#17324a;--hdr:#0b3a5a}
+body.dark .note{background:#3a2f12;border-color:#6b5a1f;color:#e9d9a6}
+body.dark .chip{background:#4a1f1b}body.dark .chip.g{background:#1d3a20}body.dark .chip.a{background:#473410}
+body.dark .sect{background:var(--th)}
+body.sz1{zoom:1.12}body.sz2{zoom:1.25}
+header .row{align-items:center}
+.tools{display:flex;gap:6px;align-items:center}
+.tools button{border:1px solid #ffffff55;background:#ffffff1a;color:#fff;border-radius:8px;padding:5px 10px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer}
+.hg{grid-template-columns:repeat(4,1fr)}
+.tile{cursor:pointer;position:relative;padding-right:26px}
+.tile:active{transform:scale(.99)}
+.tile .go{position:absolute;right:11px;top:50%;margin-top:-10px;color:var(--muted);font-size:18px}
+.tile .big{font-size:26px}
+.tile .d{margin-top:3px}
+.tile h3{display:flex;align-items:center;gap:7px}
+.impg{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.impg .k{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:650}.impg .v{font-size:24px;font-weight:700;line-height:1.25}.impg .v small{font-size:13px;font-weight:500;color:var(--muted)}.impg .s{font-size:12px;color:var(--muted)}
+@media(max-width:700px){.impg{grid-template-columns:1fr 1fr}}
+.daybar{display:flex;align-items:center;gap:8px;margin:2px 0 12px;flex-wrap:wrap}
+.daybar button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:7px 12px;font:inherit;font-weight:700;cursor:pointer}
+.daybar button:disabled{opacity:.35}
+.daybar .dl{font-size:16px;font-weight:700;min-width:120px;text-align:center}
+.daybar select{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:7px;font:inherit}
+.ov{position:fixed;inset:0;background:#0009;z-index:60;display:none;align-items:flex-end;justify-content:center}
+.ov.on{display:flex}
+.sheet{background:var(--card);color:var(--ink);width:100%;max-width:760px;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px 16px 24px}
+.sheet h3{margin:0 0 10px;font-size:15px;color:var(--ink);text-transform:none;letter-spacing:0;display:flex;justify-content:space-between;align-items:center}
+.sheet .x{border:0;background:var(--th);color:var(--ink);border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer}
+.sheet .row2{display:grid;gap:8px}
+.sheet .act{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:13px;font:inherit;font-weight:650;text-align:left;cursor:pointer;width:100%}
+.sheet .act.wa{background:#25d366;border-color:#25d366;color:#06361b}
+.sheet pre{white-space:pre-wrap;font:13px/1.5 system-ui,sans-serif;background:var(--th);border-radius:10px;padding:10px;margin:10px 0 0;max-height:240px;overflow:auto}
+#bnav{display:none}
+@media(max-width:700px){
+  .hg{grid-template-columns:1fr 1fr}
+  .tile .big{font-size:22px}.tile{padding-right:20px}
+  nav{display:none}
+  #bnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--card);border-top:1px solid var(--line);padding:4px 4px calc(4px + env(safe-area-inset-bottom))}
+  #bnav button{flex:1;border:0;background:none;color:var(--muted);font:inherit;font-size:10.5px;font-weight:650;padding:5px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+  #bnav button.on{color:var(--accent)}
+  #bnav svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  body{padding-bottom:64px}
+  header .meta{display:none}
+}
+#mSel{display:none;background:#ffffff1f;border:1px solid #ffffff55;color:#fff;border-radius:8px;padding:5px 6px;font:inherit;font-size:12.5px;max-width:150px}#mSel option{color:#14212e}#arcBar{display:none;background:#fff4d6;color:#7a4b00;text-align:center;font-size:13px;font-weight:600;padding:8px 12px;border-bottom:1px solid #f0d9a0}
+header{padding-top:env(safe-area-inset-top)}nav{padding-bottom:env(safe-area-inset-bottom)}#lock{padding-top:max(20px,env(safe-area-inset-top))}
+</style>
+</head>
+<body>
+<script>window.onerror=function(m,u,l,c){ if(/^Script error\.?$/.test(String(m))&&!l) return; try{
+ var d=document.getElementById('jserr'); if(!d){ d=document.createElement('div'); d.id='jserr'; d.style.cssText='position:fixed;left:0;right:0;top:0;z-index:999;background:#b3261e;color:#fff;font:12px/1.4 monospace;padding:8px 12px;white-space:pre-wrap;word-break:break-all;max-height:70vh;overflow:auto'; document.body.appendChild(d); }
+ var NL=String.fromCharCode(10), out='Page error: '+m+' (doc line '+l+', col '+c+').'+NL;
+ var sc=document.scripts, k, best='', t;
+ for(k=0;k<sc.length;k++){ t=sc[k].text||''; if(t.length>best.length) best=t; }
+ var ls=best.split(NL);
+ var bad=function(n){ try{ new Function(ls.slice(0,n).join(NL)); return false; }catch(e){ return /Invalid or unexpected/.test(String(e.message)); } };
+ var lo=1, hi=ls.length;
+ if(bad(hi)){ while(lo<hi){ var mid=(lo+hi)>>1; if(bad(mid)) hi=mid; else lo=mid+1; }
+   var ln=ls[lo-1], odd=[], q, cc; for(q=0;q<ln.length;q++){ cc=ln.charCodeAt(q); if(cc>126||(cc<32&&cc!==9)) odd.push(cc.toString(16)+'@'+q); }
+   out+=NL+'BAD LINE '+lo+' of '+ls.length+' (length '+ln.length+'):'+NL+ln.substring(0,300)+NL+'odd chars: '+odd.slice(0,20).join(' ')+NL+'PREVIOUS: '+(ls[lo-2]||'').substring(0,200);
+ } else { out+=NL+'(script text itself parses; scripts found: '+sc.length+', longest '+best.length+' chars)'; }
+ d.textContent=out+NL+NL+'Please send a screenshot of this to MIS.';
+}catch(e){ try{ document.title='diag fail: '+e.message; }catch(x){} } };</script>
+<div id="lock"><div class="box" id="lockbox"><div class="lgc"><img alt="BlueOcean" src="data:image/png;base64,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"></div><p id="lsub" style="margin-top:-2px">Sign in to continue</p><div id="lockform" style="text-align:left"><form id="fLogin" autocomplete="on">
+<label>Email</label><input id="lemail" name="email" type="email" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="email" required>
+<label>Password</label><input id="lpw" name="password" type="password" autocomplete="current-password" required>
+<div class="err" id="lerr"></div>
+<button id="lgo" type="submit">Sign in</button>
+<div class="n"><a href="#" id="lforgot" style="color:#9cc9ff;text-decoration:none;font-size:13px">First time or forgot password?</a></div>
+</form>
+<form id="fSet" autocomplete="off" style="display:none">
+<div id="sinfo" style="font-size:13px;margin-bottom:14px;opacity:.85">Enter your work email and tap "Send code". A 6-digit code will come to that email.</div>
+<label>Email</label><input id="semail" type="email" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="email" required>
+<button id="ssend" type="button" style="background:#ffffff22;margin-bottom:16px">Send code to my email</button>
+<label>6-digit code</label><input id="scode" inputmode="numeric" autocomplete="one-time-code" maxlength="6">
+<label>New password (minimum 6 characters)</label><input id="spw" type="password" autocomplete="new-password">
+<label>Confirm password</label><input id="spw2" type="password" autocomplete="new-password">
+<div class="err" id="serr"></div>
+<button id="sgo" type="submit">Save password &amp; continue</button>
+<div class="n"><a href="#" id="sback" style="color:#9cc9ff;text-decoration:none;font-size:13px">Back to sign in</a></div>
+</form></div></div></div>
+<header><div class="row">
+  <h1><span class="hlogo"><img alt="" src="data:image/png;base64,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"></span>Management Dashboard</h1>
+  <div class="meta" id="meta"></div>
+  <div class="tools"><select id="mSel" title="Month"></select><button id="bShare">Share</button><button id="bOut" title="Sign out">Exit</button><button id="bDark" title="Dark mode">☾</button><button id="bSize" title="Text size">A</button></div>
+</div></header><div id="arcBar"></div>
+<nav><div class="row" id="tabs"></div></nav>
+<div id="warn"></div>
+<main>
+  <div id="loading" class="card" style="text-align:center;padding:40px;color:var(--muted)">Loading latest data…</div>
+  <section id="s-home"></section>
+  <section id="s-overview"></section>
+  <section id="s-sva"></section>
+  <section id="s-production"></section>
+  <section id="s-stock"></section>
+  <section id="s-densifier"></section>
+  <section id="s-dispatch"></section>
+  <section id="s-washline"></section>
+  <section id="s-electrical"></section>
+  <section id="s-compare"></section>
+  <section id="s-imports"></section>
+  <section id="s-expenses"></section>
+  <section id="s-accounts"></section>
+</main>
+<div id="bnav"><button data-k="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Home</button><button data-k="production"><svg viewBox="0 0 24 24"><path d="M3 20V9l6 4V9l6 4V5h6v15z"/></svg>Production</button><button data-k="dispatch"><svg viewBox="0 0 24 24"><path d="M2 6h11v10H2zM13 9h5l3 3v4h-8z"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg>Dispatch</button><button data-k="accounts"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg>Accounts</button><button data-k="more"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></svg>More</button></div>
+<div class="ov" id="ov"><div class="sheet" id="sheet"></div></div>
+<footer id="foot"></footer>
+
+<script src="chart.umd.min.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+function boot(D){
+$('loading').style.display='none';
+const TARGET_T = D.meta.targetT;
+const TDISP = D.meta.targetDispT||5300;
+const TBO = D.meta.targetBO||2700, TEC = D.meta.targetEC||2400;
+const S = Object.assign({usable:.04,nonUsable:.015,creel:.005,drafter:.003,cutter:.004}, D.meta.std||{});
+const STD = {yield:D.meta.stdYield, A:D.meta.stdA};
+const C = {bo:'#2b7bb9', eco:'#334155', std:'#d97706', good:'#2e7d32', bad:'#c0392b', soft:'#cbd5e1'};
+const PAL = ['#0f4c75','#2b7bb9','#64748b','#94a3b8','#d97706','#0e7490','#cbd5e1','#7c3aed'];
+
+/* ---------- helpers ---------- */
+const sum = (a,f) => a.reduce((s,x)=>s+(+(f?f(x):x)||0),0);
+const n0 = v => Number(v).toLocaleString('en-IN',{maximumFractionDigits:0});
+const n1 = v => Number(v).toLocaleString('en-IN',{minimumFractionDigits:1,maximumFractionDigits:1});
+const n2 = v => Number(v).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+const pct = (v,d=1) => (v*100).toFixed(d)+'%';
+const dlabel = s => { const d=new Date(s+'T00:00:00'); return d.getDate()+' '+d.toLocaleString('en',{month:'short'}); };
+const dfull = s => { const d=new Date(s+'T00:00:00'); return d.getDate()+' '+d.toLocaleString('en',{month:'short'})+' '+d.getFullYear(); };
+const sgn = (v,dp=1) => (v>0?'+':'')+Number(v).toFixed(dp);
+const cls = (v,goodWhenPositive=true) => Math.abs(v)<1e-9?'mut':((v>0)===goodWhenPositive?'good':'bad');
+const byDate = arr => { const m={}; arr.forEach(r=>{ const o=m[r.date]; if(!o){ m[r.date]=Object.assign({},r); return; } Object.keys(r).forEach(k=>{ if(k==='date') return; if(typeof r[k]==='number') o[k]=(o[k]||0)+r[k]; else if(!o[k]&&r[k]) o[k]=r[k]; }); }); return m; };
+
+/* ---------- donut helpers (centre text plugin) ---------- */
+Chart.register({id:'ctr',afterDraw(ch){
+  const o=ch.options.plugins&&ch.options.plugins.ctr; if(!o||!o.text) return;
+  const {ctx,chartArea:a}=ch, x=(a.left+a.right)/2, y=(a.top+a.bottom)/2;
+  ctx.save(); ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle=o.color||CTXC; ctx.font='700 '+(o.size||18)+'px system-ui,Segoe UI,Arial';
+  ctx.fillText(o.text,x,o.sub?y-6:y);
+  if(o.sub){ ctx.fillStyle='#64748b'; ctx.font='500 10.5px system-ui,Segoe UI,Arial'; ctx.fillText(o.sub,x,y+11); }
+  ctx.restore();
+}});
+let CTXC='#14212e', CARDC='#fff', TRACK='#e8edf3';
+const charts=[];
+function mk(id,cfg){ const el=$(id); if(!el) return; cfg.options=Object.assign({responsive:true,maintainAspectRatio:false},cfg.options||{}); const c=new Chart(el,cfg); charts.push(c); return c; }
+/* gauge: value & target as ratio (e.g. 0.92 of target). good => green, else red */
+function gauge(id,ratio,good,text,sub){
+  const v=Math.max(0,Math.min(1,ratio)), col=(good==='a')?'#f59e0b':((good===true||good==='g')?C.good:C.bad);
+  mk(id,{type:'doughnut',data:{datasets:[{data:[v,1-v],backgroundColor:[col,TRACK],borderWidth:0}]},
+    options:{cutout:'74%',plugins:{legend:{display:false},tooltip:{enabled:false},ctr:{text:text,sub:sub,size:text.length>6?15:18}},animation:{duration:500}}});
+}
+function pie(id,labels,data,colors,opts){
+  mk(id,{type:'doughnut',data:{labels:labels,datasets:[{data:data,backgroundColor:colors||PAL,borderWidth:2,borderColor:CARDC}]},
+    options:{cutout:'58%',plugins:{legend:{position:'right',labels:{boxWidth:11,usePointStyle:true,font:{size:12}}},ctr:{text:(opts&&opts.center)||'',sub:(opts&&opts.sub)||'',size:19},
+      tooltip:(opts&&opts.tip)?{callbacks:{label:c=>opts.tip(c)}}:{}}}});
+}
+
+/* ---------- derived data ---------- */
+const sBO=byDate(D.spin_bo), sEC=byDate(D.spin_eco), dBO=byDate(D.draw_bo), dEC=byDate(D.draw_eco);
+const days = D.draw_bo.filter(r=>r.total>0 && (dEC[r.date]||{}).total>0).map(r=>r.date);
+const last = days[days.length-1];
+const daysInMonth = D.meta.daysInMonth, elapsed = days.length;
+function plantAgg(dm, sm, dl){   // dl = list of dates
+  const f=k=>sum(dl,d=>(dm[d]||{})[k]), g=k=>sum(dl,d=>(sm[d]||{})[k]);
+  const prodC=sum(dl,d=>(((sm[d]||{}).charging||0)>0)?((dm[d]||{}).total||0):0);   // production only on days whose spinning charging is entered (for yield)
+  return {prodC:prodC,prod:f('total'),A:f('A'),B:f('B'),creel:f('creel'),drafter:f('drafter'),cutter:f('cutter'),ch:g('charging'),us:g('usable'),nu:g('nonUsable'),
+          white:f('colWhite'),black:f('colBlack'),dtP:f('dtProcess'),dtE:f('dtElec'),dtM:f('dtMech'),dtU:f('dtUtil')};
+}
+const mBO=plantAgg(dBO,sBO,days), mEC=plantAgg(dEC,sEC,days);
+const lBO=plantAgg(dBO,sBO,[last]), lEC=plantAgg(dEC,sEC,[last]);
+const prodBO=mBO.prod/1000, prodEC=mEC.prod/1000, prodAll=prodBO+prodEC;
+const yBO=mBO.prodC/mBO.ch, yEC=mEC.prodC/mEC.ch;
+const disp = D.dispatch.filter(r=>r.plant==='Eco'||r.plant==='Cotsyn');
+const dispT=sum(disp,r=>r.qty)/1000, dispV=sum(disp,r=>r.value)/1e5;
+const dispDays=[...new Set(disp.map(r=>r.date))].sort();
+const dsh=s=>{const d=new Date(s+'T00:00:00');return d.getDate()+' '+d.toLocaleString('en',{month:'short'})};
+const barTd=(v)=>`<td>${n1(v)}</td>`;
+// two side-by-side tables of per-day figures (first half of the month left, second half right), latest day highlighted
+function dailyBlock(dates, heads, rowFn, totFn, lastDate){
+  const half=Math.ceil(dates.length/2), parts=[dates.slice(0,half),dates.slice(half)].filter(a=>a.length);
+  const tbl=(ds,withTot)=>`<div class="card"><table><tr><th class="l">Date</th>${heads.map(h=>'<th>'+h+'</th>').join('')}</tr>${ds.map(d=>`<tr${d===lastDate?' class="cur"':''}><td class="l">${dsh(d)}</td>${rowFn(d)}</tr>`).join('')}${withTot?`<tr class="tot"><td class="l">Month</td>${totFn()}</tr>`:''}</table></div>`;
+  return `<div class="grid g2">${parts.map((a,i)=>tbl(a,i===parts.length-1)).join('')}</div>`;
+}
+const wl1=D.wl1, wl2=D.wl2;
+[...wl1,...wl2].forEach(r=>{ r.run=r.actChg>0; r.ok=r.actChg>0 && r.stdProd>0; });
+const wlRun = rows=>rows.filter(r=>r.run);
+const wlLastRow = rows=>{const x=wlRun(rows); return x[x.length-1];};
+
+/* ---------- Standard vs Actual engine ---------- */
+/* item: {k,label,std,hi(true=higher is better),fmt,val(agg)} */
+const PL_ITEMS = [
+  {k:'yield',  label:'Yield (drawline ÷ charging)', std:STD.yield, hi:true,  val:a=>a.prodC/a.ch},
+  {k:'A',      label:'A-grade share',               std:STD.A,     hi:true,  val:a=>a.A/a.prod},
+  {k:'us',     label:'Usable waste (% of charging)',std:S.usable,   hi:false, val:a=>a.us/a.ch},
+  {k:'nu',     label:'Non-usable waste (% of charging)',std:S.nonUsable,hi:false,val:a=>a.nu/a.ch},
+  {k:'creel',  label:'Creel waste (% of production)',std:S.creel,   hi:false, val:a=>a.creel/a.prod, dp:2},
+  {k:'drafter',label:'Drafter waste (% of production)',std:S.drafter,hi:false,val:a=>a.drafter/a.prod,dp:2},
+  {k:'cutter', label:'Cutter waste (% of production)',std:S.cutter, hi:false, val:a=>a.cutter/a.prod,dp:2}
+];
+const NEAR = 0.015;   // within 1.5% (relative) of the standard = amber
+function stat(v,std,hi){ if(v==null) return null; if(hi?v>=std-1e-12:v<=std+1e-12) return 'g'; return Math.abs(v-std)<=NEAR*Math.abs(std)?'a':'r'; }
+function svaRows(mA,lA){
+  return PL_ITEMS.map(it=>{
+    const m=it.val(mA), l=lA.prod>0?it.val(lA):null, dp=it.dp||1;
+    return {label:it.label,std:it.std,m:m,l:l,hi:it.hi,dp:dp,st:stat(m,it.std,it.hi),stL:stat(l,it.std,it.hi)};
+  });
+}
+const rowsBO=svaRows(mBO,lBO), rowsEC=svaRows(mEC,lEC);
+function wlSva(rows){
+  const run=wlRun(rows), ok=run.filter(r=>r.ok), lr=wlLastRow(rows);
+  if(!run.length) return {items:[],last:null};
+  const T=(a,k)=>sum(a,r=>r[k]);
+  const items=[
+    {label:'Production (t)', std:T(ok,'stdProd'), m:T(ok,'actProd'), l:lr.ok?lr.actProd:null, ls:lr.ok?lr.stdProd:null, hi:true},
+    {label:'Charging (t)', std:T(run,'stdChg'), m:T(run,'actChg'), l:lr.actChg, ls:lr.stdChg, hi:true},
+    {label:'Manpower (avg / day)', std:T(run,'stdMP')/run.length, m:T(run,'actMP')/run.length, l:lr.actMP, ls:lr.stdMP, hi:false},
+    {label:'Breakdown (hrs)', std:0, m:T(run,'bd'), l:lr.bd, ls:0, hi:false, mon:true}
+  ];
+  items.forEach(i=>{ i.st=i.mon?'n':stat(i.m,i.std,i.hi); i.stL=i.mon?'n':stat(i.l,i.ls,i.hi); });
+  return {items:items,last:lr.date};
+}
+const W1=wlSva(wl1), W2=wlSva(wl2);
+
+/* ---------- tabs ---------- */
+const TABS=[['home','Home'],['overview','Overview'],['sva','Standard vs Actual'],['production','Production'],['stock','Stock'],['densifier','Densifier'],['dispatch','Dispatch'],['washline','Washline 1 & 2'],['electrical','Electricity'],['compare','Compare months'],['imports','Imports'],['expenses','Expenses'],['accounts','Accounts']];
+const built={};
+const RENDER={};
+let curTab='home';
+const BN=[['home'],['production'],['dispatch'],['accounts']];
+function show(id){
+  curTab=id;
+  TABS.forEach(([k])=>{ $('s-'+k).classList.toggle('on',k===id); });
+  [...$('tabs').children].forEach(b=>b.classList.toggle('on',b.dataset.k===id));
+  [...$('bnav').children].forEach(b=>b.classList.toggle('on',b.dataset.k===id||(b.dataset.k==='more'&&!BN.some(x=>x[0]===id))));
+  if(!built[id]){ built[id]=true; RENDER[id](); }
+  window.scrollTo({top:0});
+}
+$('tabs').innerHTML = TABS.map(([k,l])=>`<button data-k="${k}">${l}</button>`).join('');
+$('bnav').onclick=e=>{ const b=e.target.closest('button'); if(!b) return;
+  if(b.dataset.k==='more'){ sheet(`<h3>More<button class="x" onclick="closeSheet()">✕</button></h3><div class="row2">${TABS.filter(t=>!BN.some(x=>x[0]===t[0])).map(t=>`<button class="act" onclick="closeSheet();show('${t[0]}')">${t[1]}</button>`).join('')}</div>`); }
+  else show(b.dataset.k); };
+$('tabs').onclick = e=>{ if(e.target.dataset.k) show(e.target.dataset.k); };
+$('meta').innerHTML = `Production &amp; dispatch through <b>${dfull(last)}</b> · Washline through <b>${dfull(D.wl_last)}</b> · Refreshed <b>${D.meta.refreshedAt}</b>`;
+/* data warnings are kept in the Refresh log sheet, not shown on the page */
+
+const dnut=(id)=>`<div class="dn"><canvas id="${id}"></canvas></div>`;
+const gcard=(title,id,big,small,lines)=>`<div class="card"><h3>${title}</h3><div class="gc">${dnut(id)}<div class="tx"><div class="big">${big}<small>${small||''}</small></div>${lines}</div></div></div>`;
+
+
+/* ---------- import landed cost (October) ---------- */
+/* Material = invoice qty x rate ($/MT) x exchange rate. Charges exclude GST (credit is taken). Weight claims are shown separately. */
+function landed(r){
+  // the Import Lumps FMS "Details Import" tab already calculates landed cost; use it. Fall back to our own formula when the sheet has none.
+  if(r.landed>0&&r.netWt>0) return {fx:r.avgFx>0?r.avgFx:(r.fxBal>0?r.fxBal:r.fxAdv),chg:r.total,mat:r.material>0?r.material:r.landed-r.total,tot:r.landed,kg:r.landedKg>0?r.landedKg:r.landed/(r.netWt*1000),chgKg:r.total/(r.netWt*1000),ok:true};
+  const fx=r.avgFx>0?r.avgFx:((r.fxAdv>0&&r.fxBal>0)?(r.fxAdv+r.fxBal)/2:(r.fxBal>0?r.fxBal:(r.fxAdv>0?r.fxAdv:0)));
+  const chg=Math.max(0,r.total-(r.shippingGst+r.concorGst+r.transportGst+r.chaGst+r.customsGst));
+  const mat=fx>0?r.invQty*r.rate*fx:null, ok=mat!=null&&r.netWt>0;
+  return {fx:fx,chg:chg,mat:mat,tot:ok?mat+chg:null,kg:ok?(mat+chg)/(r.netWt*1000):null,chgKg:r.netWt>0?chg/(r.netWt*1000):null,ok:ok};
+}
+function landedSum(im){
+  const L=im.map(landed), okR=im.filter((r,i)=>L[i].ok), okL=L.filter(x=>x.ok);
+  const netOk=sum(okR,r=>r.netWt), netAll=sum(im,r=>r.netWt);
+  return {L:L,nOk:okR.length,n:im.length,mat:sum(okL,x=>x.mat),chgOk:sum(okL,x=>x.chg),chgAll:sum(L,x=>x.chg),netOk:netOk,netAll:netAll,
+    kg:netOk>0?(sum(okL,x=>x.tot))/(netOk*1000):null,chgKg:netAll>0?sum(L,x=>x.chg)/(netAll*1000):null};
+}
+
+/* ================= HOME ================= */
+let HD = last;                                   // selected day
+const _rup = (arr,d)=>{ const x=(arr||[]).filter(r=>r.date<=d); return x[x.length-1]; };
+function homeVals(d){
+  const dl=days.filter(x=>x<=d), need=TARGET_T/daysInMonth;
+  const tot=x=>(((dBO[x]||{}).total||0)+((dEC[x]||{}).total||0))/1000;
+  const pBO=((dBO[d]||{}).total||0)/1000, pEC=((dEC[d]||{}).total||0)/1000, mt=sum(dl,tot), proj=mt/Math.max(1,dl.length)*daysInMonth;
+  const dd=disp.filter(r=>r.date===d), dm=disp.filter(r=>r.date<=d), dN=[...new Set(dm.map(r=>r.date))].length;
+  const v={d:d,pBO:pBO,pEC:pEC,p:pBO+pEC,need:need,mt:mt,proj:proj,n:dl.length,
+    dQ:sum(dd,r=>r.qty)/1000,dV:sum(dd,r=>r.value)/1e5,mQ:sum(dm,r=>r.qty)/1000,mV:sum(dm,r=>r.value)/1e5,dAvg:sum(dm,r=>r.qty)/1000/Math.max(1,dN)};
+  v.aB=plantAgg(dBO,sBO,[d]); v.aE=plantAgg(dEC,sEC,[d]); v.mB=plantAgg(dBO,sBO,dl); v.mE=plantAgg(dEC,sEC,dl);
+  v.yB=v.aB.ch?v.aB.prodC/v.aB.ch:null; v.yE=v.aE.ch?v.aE.prodC/v.aE.ch:null;
+  const tp=v.aB.prod+v.aE.prod; v.A=tp>0?(v.aB.A+v.aE.A)/tp:null;
+  const stk=D.stock||{}, fg=[stk.bo_A,stk.bo_B,stk.eco_A,stk.eco_B].filter(x=>x&&x.length>=4);
+  v.fg=sum(fg,x=>x[3]);
+  const co=(D.coal||[]).filter(c=>/coal/i.test(c.unit)&&c.avgDay>0); v.coal=co.length?co.reduce((m,c)=>Math.min(m,c.days),1e9):null;
+  const wr=rows=>{ const x=wlRun(rows).filter(r=>r.date<=d); return x[x.length-1]||null; };
+  v.w1=wr(wl1); v.w2=wr(wl2);
+  const dn=(D.densDay||[]).filter(r=>r.date<=d); v.dn=dn.length?dn[dn.length-1]:null;
+  const dsec=k=>(D.dens||[]).filter(r=>r.section===k); v.lumpFg=sum(dsec('fglump'),r=>r.closing)/1000; v.lumpRaw=sum(dsec('rawlump'),r=>r.closing)/1000;
+  const fl=D.flake||[], bt=D.bottle||[];
+  const ft=fl.filter(r=>r.item.toLowerCase()==='total'), bT=bt.find(r=>r.item.toLowerCase()==='total')||null;
+  v.flake=sum(ft,r=>r.closing); v.flakeUse=sum(ft,r=>r.consumption); v.bottle=bT?bT.closing:0; v.bottleUse=bT?bT.consume:0;
+  v.flakeDays=v.flakeUse>0?v.flake/(v.flakeUse/Math.max(1,dl.length)):null; v.bottleDays=v.bottleUse>0?v.bottle/(v.bottleUse/Math.max(1,dl.length)):null;
+  v.flBad=fl.filter(r=>r.flag).concat(bt.filter(r=>r.flag));
+  const im=D.imports||[]; v.imN=im.length; v.imNet=sum(im,r=>r.netWt); v.imInv=sum(im,r=>r.invQty); v.imCh=sum(im,r=>r.total);
+  v.imCont=sum(im,r=>String(r.containers||'').split(',').map(x=>x.trim()).filter(Boolean).length);
+  v.imFlag=im.filter(r=>r.invQty>0&&Math.abs((r.netWt-r.invQty)/r.invQty)>0.02).length;
+  return v;
+}
+const Lk=v=>{ const a=Math.abs(v), s=v<0?'-':''; return a>=1e7?s+n2(a/1e7)+' Cr':a>=1e5?s+n2(a/1e5)+' L':s+n0(a); };
+function dot(c){ return `<span class="dot ${c}"></span>`; }
+function attention(v){
+  const out=[];
+  const sv=[]; [['BlueOcean',rowsBO],['Eco',rowsEC]].forEach(([n,rows])=>rows.forEach(r=>{ if(r.st==='r') sv.push(n+' · '+r.label.split(' (')[0]); }));
+  [['WL1',W1],['WL2',W2]].forEach(([n,w])=>w.items.forEach(i=>{ if(i.st==='r'&&!i.mon) sv.push(n+' · '+i.label.split(' (')[0]); }));
+  if(sv.length) out.push(['r',sv.length+' item'+(sv.length>1?'s':'')+' off standard this month','sva']);
+  if(v.p<v.need*0.95) out.push(['r','Production '+n0(v.p)+' t is below daily need '+n0(v.need)+' t','production']);
+  if(v.proj<TARGET_T) out.push(['a','Month projection '+n0(v.proj)+' t is below target '+n0(TARGET_T)+' t','overview']);
+  if(v.mQ/Math.max(1,v.n)*daysInMonth<TDISP*0.97) out.push(['a','Dispatch projection '+n0(v.mQ/Math.max(1,v.n)*daysInMonth)+' t is below target '+n0(TDISP)+' t','dispatch']);
+  if(v.coal!=null&&v.coal<5) out.push(['r','Coal cover only '+n1(v.coal)+' days','stock']); else if(v.coal!=null&&v.coal<10) out.push(['a','Coal cover '+n1(v.coal)+' days','stock']);
+  if(v.flakeDays!=null&&v.flakeDays<5) out.push(['r','Flake stock covers only '+n1(v.flakeDays)+' days','stock']);
+  if(v.bottleDays!=null&&v.bottleDays<5) out.push(['r','Bottle stock covers only '+n1(v.bottleDays)+' days','stock']);
+  if(v.imFlag) out.push(['a',v.imFlag+' import invoice'+(v.imFlag>1?'s':'')+' with weight difference above 2%','imports']);
+  if(v.flBad.length) out.push(['a','Washline stock sheet has '+v.flBad.length+' line(s) to correct','stock']);
+  if(!(D.dens||[]).length) out.push(['a','Densifier data not available','densifier']);
+  return out;
+}
+RENDER.home = ()=>{
+  const v=homeVals(HD), i=days.indexOf(HD), att=attention(v);
+  const dn=days.length&&HD===last;
+  const stC=(x,std,hi)=>x==null?'n':stat(x,std,hi);
+  const pCol=v.p>=v.need?'g':v.p>=v.need*0.95?'a':'r', projCol=v.proj>=TARGET_T?'g':v.proj>=TARGET_T*0.97?'a':'r';
+  const dCol=v.dQ>=v.dAvg?'g':v.dQ>=v.dAvg*0.8?'a':'r';
+  const yc=[stC(v.yB,STD.yield,true),stC(v.yE,STD.yield,true)], yCol=yc.indexOf('r')>=0?'r':yc.indexOf('a')>=0?'a':'g';
+  const chOk=v.aB.ch>0&&v.aE.ch>0, chAll=v.aB.ch+v.aE.ch, yAll=chOk?(v.aB.prodC+v.aE.prodC)/chAll:null, yAllCol=stC(yAll,STD.yield,true);
+  const yMiss=[v.aB.ch>0?'':'BlueOcean',v.aE.ch>0?'':'Eco'].filter(Boolean).join(' & ');
+  const chM=v.mB.ch+v.mE.ch, yMAll=chM>0?(v.mB.prodC+v.mE.prodC)/chM:null, yMCol=stC(yMAll,STD.yield,true);
+  const aCol=stC(v.A,STD.A,true), coalCol=v.coal==null?'n':v.coal<5?'r':v.coal<10?'a':'g';
+  const tile=(go,title,col,big,small,d1,d2)=>`<div class="card tile" onclick="${go}"><h3>${dot(col)}${title}</h3><div class="big">${big}<small>${small||''}</small></div><div class="d">${d1||''}</div>${d2?`<div class="d mut">${d2}</div>`:''}<span class="go">›</span></div>`;
+  const P=(x,d)=>x==null||isNaN(x)?'–':pct(x,d==null?1:d);
+  const dpProj=v.mQ/Math.max(1,v.n)*daysInMonth, dpC=dpProj>=TDISP?'g':dpProj>=TDISP*0.97?'a':'r';
+  const need=(days.length?Math.max(0,(TARGET_T-v.mt)/Math.max(1,daysInMonth-v.n)):0);
+  // plant cards
+  const plant=(name,a,m,rows,tg)=>{
+    const R=rows, f=(k,dp)=>`<td>${P(R[k].m,dp)}</td><td class="mut">${R[k].hi?'≥':'≤'} ${pct(R[k].std,dp)}</td><td>${dot(R[k].st||'n')}</td>`;
+    return `<div class="card"><h3>${name}</h3>
+      <div class="d">Today · charging <b>${n1(a.ch/1000)} t</b> · production <b>${n1(a.prod/1000)} t</b></div>
+      <div class="d">Today · yield <b>${P(a.ch?a.prodC/a.ch:null)}</b> · A-grade <b>${P(a.prod?a.A/a.prod:null)}</b></div>
+      <div class="d mut">Month · production ${n0(m.prod/1000)} t · charging ${n0(m.ch/1000)} t</div>
+      <div class="d" style="margin-bottom:6px">Target <b>${n0(tg)} t</b> · <b class="${m.prod/1000>=tg*v.n/daysInMonth?'good':'bad'}">${pct(m.prod/1000/tg,0)}</b> done · projected <b class="${m.prod/1000/Math.max(1,v.n)*daysInMonth>=tg?'good':'bad'}">${n0(m.prod/1000/Math.max(1,v.n)*daysInMonth)} t</b> · need ${n0(Math.max(0,(tg-m.prod/1000)/Math.max(1,daysInMonth-v.n)))} t/day</div>
+      <table><tr><th class="l">Month to date</th><th>Actual</th><th>Standard</th><th></th></tr>
+      <tr><td class="l">Yield</td>${f(0,1)}</tr><tr><td class="l">A-grade</td>${f(1,1)}</tr>
+      <tr><td class="l">Usable waste</td>${f(2,1)}</tr><tr><td class="l">Non-usable waste</td>${f(3,1)}</tr>
+      <tr><td class="l">Creel waste</td>${f(4,2)}</tr><tr><td class="l">Drafter waste</td>${f(5,2)}</tr><tr><td class="l">Cutter waste</td>${f(6,2)}</tr></table></div>`; };
+  const rB=svaRows(v.mB,v.aB), rE=svaRows(v.mE,v.aE);
+  const wl=(n,r,W)=>{ if(!r) return tile("gotoTab('washline')",n,'n','–','','No run recorded','');
+    const ok=r.actChg>0&&r.stdProd>0, c=ok?stC(r.actProd,r.stdProd,true):'n';
+    return tile("gotoTab('washline')",n+(r.date!==HD?' · '+dsh(r.date):''),c,n1(r.actProd),'t','Standard '+n0(r.stdProd)+' t'+(ok?' · '+pct(r.actProd/r.stdProd,0):''),'Charging '+n1(r.actChg)+' t'); };
+  const dd=v.dn;
+  const ulAll=(D.unload||[]), ul={bo:ulAll.filter(r=>r.plant==='BlueOcean'),ec:ulAll.filter(r=>r.plant==='Eco')};
+  const unl=(name,rows)=>{
+    const mm=rows.filter(r=>r.date<=HD), dr=mm.find(r=>r.date===HD), T=k=>sum(mm,r=>r[k])/1000;
+    if(!rows.length) return `<div class="card"><h3>${name}</h3><div class="d mut">No unloading data found in the Washline file.</div></div>`;
+    return `<div class="card"><h3>${name} · material unloaded</h3>
+      <div class="d">${dsh(HD)} · <b>${dr&&dr.total>0?n1(dr.total/1000)+' t':'nothing unloaded'}</b>${dr&&dr.trucks>0?' · '+n0(dr.trucks)+' truck'+(dr.trucks>1?'s':''):''}</div>
+      <div class="big">${n0(T('total'))}<small>t this month</small></div>
+      <div class="d mut">${n0(sum(mm,r=>r.trucks))} trucks · avg ${n1(T('total')/Math.max(1,mm.length))} t/day</div>
+      <table><tr><th class="l">Month to date</th><th>Tonnes</th><th>Share</th></tr>
+      ${[['Bottle &amp; jar','bottle'],['Flake','flake'],['Lump &amp; popcorn','lump'],['Chips, sheet, wiry, other','other']].map(g=>`<tr><td class="l">${g[0]}</td><td>${n1(T(g[1]))}</td><td>${T('total')>0?pct(T(g[1])/T('total'),0):'–'}</td></tr>`).join('')}</table></div>`; };
+  const IM=D.imports||[], LS=landedSum(IM);
+  const topP=(()=>{ const m={}; IM.forEach(r=>{ m[r.party||'–']=(m[r.party||'–']||0)+r.netWt; }); return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,2).map(x=>x[0].replace(/ (PTE|LTD|LLC|FZC|SRL|GENERAL TRADING).*$/i,'')+' '+n0(x[1])+' MT').join(' · '); })();
+  const impCard=!IM.length?`<div class="card tile" style="margin-top:12px" onclick="gotoTab('imports')"><h3>${dot('n')}Import · ${D.meta.month||'this month'}</h3><div class="d mut">No import received this month.</div></div>`:
+  `<div class="card tile" style="margin-top:12px;padding-right:30px" onclick="gotoTab('imports')"><h3>${dot(v.imFlag?'a':'g')}Import lumps · ${D.meta.month||'this month'}</h3>
+    <div class="impg">
+      <div><div class="k">Received</div><div class="v">${n0(LS.netAll)}<small> MT</small></div><div class="s">${IM.length} invoices · ${n0(v.imCont)} containers</div></div>
+      <div><div class="k">Landed cost</div><div class="v">${LS.kg==null?'–':'₹ '+n1(LS.kg)}<small>${LS.kg==null?'':' /kg'}</small></div><div class="s">${LS.nOk} of ${LS.n} invoices with exchange rate</div></div>
+      <div><div class="k">Charges (excl. GST)</div><div class="v">₹ ${n1(LS.chgKg==null?0:LS.chgKg)}<small> /kg</small></div><div class="s">₹ ${n1(LS.chgAll/1e5)} lakh in total</div></div>
+      <div><div class="k">Material value</div><div class="v">${LS.mat?'₹ '+n2(LS.mat/1e7)+'<small> Cr</small>':'–'}</div><div class="s">${LS.nOk?'on '+LS.nOk+' invoices':'exchange rate pending'}</div></div>
+    </div>
+    <div class="d mut" style="margin-top:8px">${topP?'Main suppliers: '+topP:''}${v.imFlag?' · <b class="amb">'+v.imFlag+' invoice'+(v.imFlag>1?'s':'')+' with weight difference above 2%</b>':''}${LS.nOk<LS.n?' · <b class="amb">'+(LS.n-LS.nOk)+' waiting for exchange rate</b>':''}</div><span class="go">›</span></div>`;
+  $('s-home').innerHTML=`
+  <div class="daybar"><button id="hPrev" ${i<=0?'disabled':''}>‹</button><div class="dl">${dfull(HD)}</div><button id="hNext" ${i>=days.length-1?'disabled':''}>›</button>
+    <select id="hSel">${days.slice().reverse().map(d=>`<option value="${d}"${d===HD?' selected':''}>${dfull(d)}</option>`).join('')}</select>${dn?'<span class="chip g">Latest</span>':'<button id="hLast">Go to latest</button>'}</div>
+  <h2 style="margin-top:6px">Overall · today</h2>
+  <div class="grid hg">
+    ${tile("drill('prod')",'Production · both plants',pCol,n0(v.p),'t','BlueOcean '+n0(v.pBO)+' · Eco '+n0(v.pEC),'Daily need '+n0(v.need)+' t')}
+    ${tile("drill('disp')",'Dispatch',dCol,n0(v.dQ),'t','₹ '+n1(v.dV)+' lakh'+(v.dQ>0?' · ₹ '+n1(v.dV*1e5/(v.dQ*1000))+'/kg':''),'Month avg '+n0(v.dAvg)+' t/day')}
+    ${tile("drill('yield')",'Yield · both plants',yAllCol,P(yAll),'','BlueOcean '+P(v.yB)+' · Eco '+P(v.yE),chOk?'Standard '+pct(STD.yield,0)+' · drawline ÷ charging':'<b class="amb">'+yMiss+' spinning charging not entered yet</b>')}
+    ${tile("gotoTab('production')",'A-grade',aCol,P(v.A),'','Standard '+pct(STD.A,1),'Both plants, drawline')}
+    ${tile("gotoTab('stock')",'Finished goods stock','n',n0(v.fg),'t','A + B grade, both plants','')}
+    ${tile("gotoTab('stock')",'Coal cover',coalCol,v.coal==null?'–':n1(v.coal),v.coal==null?'':' days','Lowest across units','')}
+  </div>
+  <h2>Month so far</h2>
+  <div class="grid hg">
+    ${tile("drill('prod')",'Production vs target',projCol,n0(v.mt),'t','Target '+n0(TARGET_T)+' t · '+pct(v.mt/TARGET_T,0),'Projected '+n0(v.proj)+' t')}
+    ${tile("gotoTab('sva')",'Yield · month',yMCol,P(yMAll),'','BlueOcean '+P(v.mB.ch?v.mB.prodC/v.mB.ch:null)+' · Eco '+P(v.mE.ch?v.mE.prodC/v.mE.ch:null),'Standard '+pct(STD.yield,0)+' · month to date')}
+    ${tile("gotoTab('overview')",'Daily need from now',v.n<daysInMonth&&need>v.mt/Math.max(1,v.n)*1.03?'r':'g',n0(need),'t/day','Month average '+n0(v.mt/Math.max(1,v.n))+' t/day','')}
+    ${tile("drill('disp')",'Dispatch vs target',dpC,n0(v.mQ),'t','Target '+n0(TDISP)+' t · '+pct(v.mQ/TDISP,0),'Projected '+n0(dpProj)+' t · ₹ '+n1(v.mV)+' lakh'+(v.mQ>0?' · ₹ '+n1(v.mV*1e5/(v.mQ*1000))+'/kg':''))}
+  </div>
+  <h2>BlueOcean and Eco</h2>
+  <div class="grid g2">${plant('BlueOcean',v.aB,v.mB,rB,TBO)}${plant('Eco',v.aE,v.mE,rE,TEC)}</div>
+  <h2>Washline 1 &amp; 2 · day production</h2>
+  <div class="grid hg">${wl('Washline 1',v.w1)}${wl('Washline 2',v.w2)}</div>
+  <h2>Densifier</h2>
+  <div class="grid hg">
+    ${tile("gotoTab('densifier')",'Lump produced'+(dd&&dd.date!==HD?' · '+dsh(dd.date):''),'n',dd?n1(dd.prod/1000):'–','t',dd?'Consumed '+n1(dd.cons/1000)+' t':'','')}
+    ${tile("gotoTab('densifier')",'Densifier yield','n',dd&&dd.cons>0?pct(dd.prod/dd.cons,1):'–','','Lump ÷ raw lump consumed','')}
+    ${tile("gotoTab('densifier')",'Lump stock','n',n0(v.lumpFg),'t','Finished lump','Raw lump '+n0(v.lumpRaw)+' t')}
+  </div>
+  <h2>Material unloading · BlueOcean &amp; Eco</h2>
+  <div class="grid g2">${unl('BlueOcean',ul.bo)}${unl('Eco',ul.ec)}</div>
+  <h2>Raw material &amp; import</h2>
+  <div class="grid hg">
+    ${tile("gotoTab('stock')",'Flake stock',v.flakeDays==null?'n':v.flakeDays<5?'r':v.flakeDays<10?'a':'g',n0(v.flake),'t',v.flakeDays==null?'':'Cover '+n1(v.flakeDays)+' days','')}
+    ${tile("gotoTab('stock')",'Bottle stock',v.bottleDays==null?'n':v.bottleDays<5?'r':v.bottleDays<10?'a':'g',n0(v.bottle),'t',v.bottleDays==null?'':'Cover '+n1(v.bottleDays)+' days','')}
+  </div>
+  ${impCard}
+  <div class="card" style="margin-top:12px"><h3>Needs attention <span style="text-transform:none;letter-spacing:0;font-weight:600" class="${att.some(a=>a[0]==='r')?'bad':att.length?'amb':'good'}">${att.length?att.length+' item'+(att.length>1?'s':''):'All clear'}</span></h3>
+    <div>${att.length?att.map(a=>`<span class="chip ${a[0]==='a'?'a':''}" style="cursor:pointer" onclick="gotoTab('${a[2]}')">${a[1]}</span>`).join(''):'<span class="chip g">Nothing needs attention</span>'}</div>
+    <div class="sub" style="margin-top:6px">Tap a card for its trend or details. Use the arrows to look at an earlier day.</div></div>`;
+  const go=d=>{ HD=d; built.home=false; RENDER.home(); built.home=true; };
+  $('hPrev').onclick=()=>go(days[i-1]); $('hNext').onclick=()=>go(days[i+1]); $('hSel').onchange=e=>go(e.target.value);
+  if($('hLast')) $('hLast').onclick=()=>go(last);
+};
+
+/* ---------- drill-down sheet ---------- */
+let dChart=null;
+function closeSheet(){ $('ov').classList.remove('on'); if(dChart){ dChart.destroy(); dChart=null; } }
+$('ov').onclick=e=>{ if(e.target.id==='ov') closeSheet(); };
+function sheet(html){ if(dChart){ dChart.destroy(); dChart=null; } $('sheet').innerHTML=html; $('ov').classList.add('on'); }
+function drillTable(heads,rows){ return `<div class="scroll" style="max-height:230px;margin-top:10px"><table><tr>${heads.map((h,i)=>`<th${i?'':' class="l"'}>${h}</th>`).join('')}</tr>${rows.map(r=>`<tr>${r.map((c,i)=>`<td${i?'':' class="l"'}>${c}</td>`).join('')}</tr>`).join('')}</table></div>`; }
+function drill(k){
+  if(k==='stock'){ closeSheet(); return gotoTab('stock'); }
+  const dl=days.filter(x=>x<=HD), nav=(t)=>`<h3>${t}<button class="x" onclick="closeSheet()">✕</button></h3><div class="chd" style="height:210px"><canvas id="dch"></canvas></div>`;
+  const grid=document.body.classList.contains('dark')?'#233648':'rgba(0,0,0,.08)';
+  const draw=(type,labels,sets,opt)=>{ dChart=new Chart($('dch'),{type:type,data:{labels:labels,datasets:sets},options:Object.assign({responsive:true,maintainAspectRatio:false,plugins:{legend:{display:sets.length>1,labels:{boxWidth:10}}},scales:{x:{stacked:!!(opt&&opt.stack),grid:{display:false}},y:{stacked:!!(opt&&opt.stack),grid:{color:grid},beginAtZero:!(opt&&opt.noZero)}}},opt&&opt.o||{})}); };
+  const lab=dl.map(dsh);
+  if(k==='prod'){
+    const b=dl.map(d=>+(((dBO[d]||{}).total||0)/1000).toFixed(1)), e=dl.map(d=>+(((dEC[d]||{}).total||0)/1000).toFixed(1));
+    sheet(nav('Daily production (t)')+drillTable(['Date','BlueOcean','Eco','Total'],dl.map((d,i)=>[dsh(d),n1(b[i]),n1(e[i]),'<b>'+n1(b[i]+e[i])+'</b>']).reverse()));
+    draw('bar',lab,[{label:'BlueOcean',data:b,backgroundColor:C.bo},{label:'Eco',data:e,backgroundColor:C.eco}],{stack:1});
+  } else if(k==='disp'){
+    const dd=[...new Set(disp.filter(r=>r.date<=HD).map(r=>r.date))].sort(), q=dd.map(d=>sum(disp.filter(r=>r.date===d),r=>r.qty)/1000), vv=dd.map(d=>sum(disp.filter(r=>r.date===d),r=>r.value)/1e5);
+    sheet(nav('Daily dispatch (t)')+drillTable(['Date','Tonnes','₹ lakh','Avg ₹/kg'],dd.map((d,i)=>[dsh(d),n1(q[i]),n1(vv[i]),q[i]>0?n1(vv[i]*1e5/(q[i]*1000)):'–']).reverse()));
+    draw('bar',dd.map(dsh),[{label:'Dispatch (t)',data:q.map(x=>+x.toFixed(1)),backgroundColor:C.bo}]);
+  } else if(k==='yield'){
+    const yv=(m,s,d)=>{ const a=plantAgg(m,s,[d]); return a.ch?+(a.prodC/a.ch*100).toFixed(1):null; };
+    const b=dl.map(d=>yv(dBO,sBO,d)), e=dl.map(d=>yv(dEC,sEC,d));
+    sheet(nav('Daily yield % (std '+pct(STD.yield,0)+')')+drillTable(['Date','BlueOcean %','Eco %'],dl.map((d,i)=>[dsh(d),b[i]==null?'–':n1(b[i]),e[i]==null?'–':n1(e[i])]).reverse()));
+    draw('line',lab,[{label:'BlueOcean',data:b,borderColor:C.bo,backgroundColor:C.bo,tension:.25},{label:'Eco',data:e,borderColor:C.eco,backgroundColor:C.eco,tension:.25},{label:'Standard',data:dl.map(()=>STD.yield*100),borderColor:C.std,borderDash:[5,4],pointRadius:0}],{noZero:1});
+  } else if(k==='petty'){
+    const pc=(D.accPetty||[]).filter(r=>r.date<=HD);
+    sheet(nav('Petty cash · closing balance (₹)')+drillTable(['Date','Received','Spent','Closing'],pc.map(r=>[dsh(r.date),n0(r.received),n0(r.expenses),'<b>'+n0(r.closing)+'</b>']).reverse()));
+    draw('line',pc.map(r=>dsh(r.date)),[{label:'Closing',data:pc.map(r=>r.closing),borderColor:C.bo,backgroundColor:'#2b7bb933',fill:true,tension:.25}],{noZero:1});
+  } else if(k==='bank'){
+    const bk=(D.accBank||[]).filter(r=>r.date<=HD), bd=[...new Set(bk.map(r=>r.date))].sort(), rc=bd.map(d=>sum(bk.filter(r=>r.date===d),r=>r.received)/1e5), py=bd.map(d=>sum(bk.filter(r=>r.date===d),r=>r.payment)/1e5);
+    sheet(nav('Bank · daily received vs paid (₹ lakh)')+drillTable(['Date','Received','Paid','Net'],bd.map((d,i)=>[dsh(d),n1(rc[i]),n1(py[i]),`<span class="${cls(rc[i]-py[i])}">${n1(rc[i]-py[i])}</span>`]).reverse())+'<div class="sub" style="margin-top:8px"><a href="#" onclick="closeSheet();return gotoTab(&#39;accounts&#39;)">Open Accounts tab</a> for balances per account.</div>');
+    draw('bar',bd.map(dsh),[{label:'Received',data:rc.map(x=>+x.toFixed(1)),backgroundColor:C.good},{label:'Paid',data:py.map(x=>+x.toFixed(1)),backgroundColor:C.bad}]);
+  }
+}
+window.drill=drill; window.closeSheet=closeSheet;
+
+/* ---------- share (WhatsApp / copy / image) ---------- */
+function summaryText(){
+  const v=homeVals(HD), att=attention(v).slice(0,5);
+  const l=[`*BlueOcean Ecotech · ${dfull(HD)}*`,'',
+    `*Production:* ${n1(v.p)} t (BlueOcean ${n1(v.pBO)} | Eco ${n1(v.pEC)})`,
+    `Month: ${n0(v.mt)} t of ${n0(TARGET_T)} t (${pct(v.mt/TARGET_T,0)}) · projected ${n0(v.proj)} t`,
+    `BlueOcean month: ${n0(v.mB.prod/1000)} of ${n0(TBO)} t (${pct(v.mB.prod/1000/TBO,0)}) · Eco: ${n0(v.mE.prod/1000)} of ${n0(TEC)} t (${pct(v.mE.prod/1000/TEC,0)})`,
+    `*Dispatch:* ${n1(v.dQ)} t · ₹ ${n1(v.dV)} lakh`,
+    `Month: ${n0(v.mQ)} t of ${n0(TDISP)} t (${pct(v.mQ/TDISP,0)}) · ₹ ${n1(v.mV)} lakh`,
+    `*Yield:* BlueOcean ${v.yB==null?'–':pct(v.yB)} | Eco ${v.yE==null?'–':pct(v.yE)} (std ${pct(STD.yield,0)})`,
+    `*FG stock:* ${n0(v.fg)} t`+(v.coal!=null?` · Coal cover ${n1(v.coal)} days`:'')];
+  if(att.length){ l.push('','*Needs attention:*'); att.forEach(a=>l.push('• '+a[1])); }
+  return l.join(String.fromCharCode(10));
+}
+function openShare(){
+  const t=summaryText();
+  sheet(`<h3>Share summary · ${dfull(HD)}<button class="x" onclick="closeSheet()">✕</button></h3>
+   <div class="row2">
+    <button class="act wa" id="shWa">Send on WhatsApp (text)</button>
+    <button class="act" id="shNative">Share with other apps…</button>
+    <button class="act" id="shImg">Share screen as image</button>
+    <button class="act" id="shCopy">Copy text</button></div>
+   <div class="sub" style="margin-top:10px">The person receiving it does not need the app or a login. They see only the numbers in this message.</div><pre id="shTxt"></pre><div class="sub" id="shMsg"></div>`);
+  $('shTxt').textContent=t;
+  const msg=m=>{ $('shMsg').textContent=m; };
+  $('shWa').onclick=()=>{ window.open(HTTPS+'wa.me/?text='+encodeURIComponent(t),'_blank'); };
+  $('shNative').onclick=()=>{ if(navigator.share){ navigator.share({title:'BlueOcean summary',text:t}).catch(()=>msg('Sharing was cancelled or is not allowed here. Use the WhatsApp button.')); } else msg('This browser has no share menu. Use the WhatsApp button.'); };
+  $('shCopy').onclick=()=>{ const fin=()=>msg('Copied. Paste it in any chat.'); (navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t):Promise.reject()).then(fin,()=>{ const r=document.createRange(); r.selectNodeContents($('shTxt')); const s=getSelection(); s.removeAllRanges(); s.addRange(r); try{ document.execCommand('copy'); fin(); }catch(e){ msg('Select the text above and copy it.'); } }); };
+  $('shImg').onclick=()=>{
+    msg('Preparing image…');
+    const go=()=>{ show('home'); closeSheet();
+      setTimeout(()=>{ html2canvas($('s-home'),{backgroundColor:getComputedStyle(document.body).backgroundColor,scale:2}).then(cv=>cv.toBlob(b=>{
+        const f=new File([b],'BlueOcean_'+HD+'.png',{type:'image/png'});
+        if(navigator.canShare&&navigator.canShare({files:[f]})) navigator.share({files:[f],title:'BlueOcean summary'}).catch(()=>{});
+        else { const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=f.name; a.click(); }
+      })).catch(()=>alert('Could not make the image. Please take a screenshot instead.')); },250); };
+    if(window.html2canvas) go(); else { const s=document.createElement('script'); s.src=HTTPS+'cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'; s.onload=go; s.onerror=()=>msg('Could not load the image tool. Please take a screenshot instead.'); document.head.appendChild(s); }
+  };
+}
+$('bShare').onclick=openShare;
+
+/* ---------- dark mode + text size ---------- */
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+function applyTheme(dark){
+  document.body.classList.toggle('dark',dark);
+  CTXC=dark?'#e6edf3':'#14212e'; CARDC=dark?'#12212f':'#fff'; TRACK=dark?'#26394b':'#e8edf3';
+  Chart.defaults.color=dark?'#9db0c2':'#64748b'; Chart.defaults.borderColor=dark?'#233648':'rgba(0,0,0,.1)';
+  $('bDark').textContent=dark?'☀':'☾';
+}
+function applySize(n){ document.body.classList.toggle('sz1',n===1); document.body.classList.toggle('sz2',n===2); }
+let SZ=Number(lsGet('bo_size')||0)||0;
+applySize(SZ); applyTheme(lsGet('bo_dark')==='1');
+$('bSize').onclick=()=>{ SZ=(SZ+1)%3; applySize(SZ); lsSet('bo_size',String(SZ)); };
+$('bDark').onclick=()=>{
+  const dk=!document.body.classList.contains('dark'); lsSet('bo_dark',dk?'1':'0'); applyTheme(dk);
+  charts.forEach(c=>{ try{c.destroy();}catch(e){} }); charts.length=0; Object.keys(built).forEach(k=>built[k]=false); show(curTab);
+};
+
+/* ================= OVERVIEW ================= */
+RENDER.overview = ()=>{
+  const reqPerDay=(TARGET_T-prodAll)/Math.max(1,daysInMonth-elapsed), avg=prodAll/elapsed, proj=avg*daysInMonth;
+  const w1=W1.items, w2=W2.items;
+  const bad=[], near=[]; let total=0, good=0;
+  const tally=(name,label,st)=>{ if(st==='n'||st==null) return; total++; const t=name+' · '+label.replace(/ \(.*\)/,''); if(st==='r') bad.push(t); else if(st==='a'){ near.push(t); } else good++; };
+  rowsBO.forEach(r=>tally('BlueOcean',r.label,r.st)); rowsEC.forEach(r=>tally('Eco',r.label,r.st));
+  [['WL1',W1],['WL2',W2]].forEach(([n,w])=>w.items.forEach(i=>tally(n,i.label,i.st)));
+  const w1p=w1[0]||{m:0,std:1}, w2p=w2[0]||{m:0,std:1};
+  $('s-overview').innerHTML = `
+  <div class="grid g4">
+    <div class="card"><h3>Production · month to date</h3><div class="gc">${dnut('o1')}<div class="tx"><div class="big">${n0(prodAll)}<small>t</small></div>
+      <div class="d">Target ${n0(TARGET_T)} t</div><div class="d mut">Avg ${n1(avg)} t/day · need ${n1(reqPerDay)} t/day · projected <b class="${proj>=TARGET_T?'good':'bad'}">${n0(proj)} t</b></div></div></div></div>
+    <div class="card"><h3>Dispatch · month to date</h3><div class="gc">${dnut('o2')}<div class="tx"><div class="big">${n0(dispT)}<small>t</small></div>
+      <div class="d">₹ ${n1(dispV)} lakh · avg ₹ ${n1(dispV*1e5/(dispT*1000))}/kg</div><div class="d"><span class="dot" style="background:#2b7bb9"></span>Cotsyn ${n0(sum(disp.filter(r=>r.plant==='Cotsyn'),r=>r.qty)/1000)} t</div><div class="d"><span class="dot" style="background:#334155"></span>Eco ${n0(sum(disp.filter(r=>r.plant==='Eco'),r=>r.qty)/1000)} t</div></div></div></div>
+    <div class="card"><h3>Yield vs ${pct(STD.yield,0)} standard</h3><div class="two">
+      <div>${dnut('o3a')}<div class="l">BlueOcean</div><div class="s ${stc(stat(yBO,STD.yield,true))}">${sgn((yBO-STD.yield)*100)} pts</div></div>
+      <div>${dnut('o3b')}<div class="l">Eco</div><div class="s ${stc(stat(yEC,STD.yield,true))}">${sgn((yEC-STD.yield)*100)} pts</div></div></div></div>
+    <div class="card"><h3>Washline output vs standard</h3><div class="two">
+      <div>${dnut('o4a')}<div class="l">WL1</div><div class="s">${n0(w1p.m)} / ${n0(w1p.std)} t</div></div>
+      <div>${dnut('o4b')}<div class="l">WL2</div><div class="s">${n0(w2p.m)} / ${n0(w2p.std)} t</div></div></div></div>
+  </div>
+  <div class="card" style="margin-top:12px"><h3>Standard vs actual · month to date</h3>
+    <div style="font-size:15px;margin:4px 0 6px"><b class="${bad.length?'bad':'good'}">${bad.length}</b> off standard · <b class="amb">${near.length}</b> near (within 1.5%) · <b class="good">${good}</b> on standard <span class="mut">(of ${total})</span></div>
+    <div>${bad.map(b=>`<span class="chip">${b}</span>`).join('')}${near.map(b=>`<span class="chip a">${b}</span>`).join('')}${!bad.length&&!near.length?'<span class="chip g">All items within standard</span>':''}</div>
+    <div class="sub" style="margin-top:6px">Details on the <a href="#" onclick="return gotoTab('sva')">Standard vs Actual</a> tab.</div></div>`;
+  gauge('o1',prodAll/TARGET_T,prodAll>=TARGET_T*elapsed/daysInMonth,pct(prodAll/TARGET_T,0),'of target');
+  const pc={Cotsyn:0,Eco:0}; disp.forEach(r=>pc[r.plant]+=r.qty/1000);
+  mk('o2',{type:'doughnut',data:{labels:['Cotsyn (BlueOcean)','Eco'],datasets:[{data:[+pc.Cotsyn.toFixed(1),+pc.Eco.toFixed(1)],backgroundColor:[C.bo,C.eco],borderWidth:2,borderColor:CARDC}]},
+    options:{cutout:'66%',plugins:{legend:{display:false},ctr:{text:'',sub:''}}}});
+  gauge('o3a',yBO/1.0,stat(yBO,STD.yield,true),pct(yBO),'');
+  gauge('o3b',yEC/1.0,stat(yEC,STD.yield,true),pct(yEC),'');
+  gauge('o4a',w1p.m/w1p.std,stat(w1p.m,w1p.std,true),pct(w1p.m/w1p.std,0),'');
+  gauge('o4b',w2p.m/w2p.std,stat(w2p.m,w2p.std,true),pct(w2p.m/w2p.std,0),'');
+};
+window.gotoTab=function(k){ show(k); return false; };
+window.show=show;
+
+/* ================= STANDARD vs ACTUAL ================= */
+function pctCell(v,dp){ return v==null?'<span class="mut">–</span>':(v*100).toFixed(dp)+'%'; }
+const stc=st=>st==='g'?'good':st==='r'?'bad':st==='a'?'amb':'mut';
+function svaBlock(title,rows,lastDate){
+  const okN=rows.filter(r=>r.st!=='r').length;
+  return `<div class="card"><h3>${title} <span style="float:right;text-transform:none;letter-spacing:0" class="${okN===rows.length?'good':'bad'}">${rows.length-okN} off standard</span></h3>
+  <table><tr><th class="l">Item</th><th>Standard</th><th>${dlabel(lastDate)}</th><th>Gap</th><th>Month to date</th><th>Gap</th><th></th></tr>
+  ${rows.map(r=>{ const gm=(r.m-r.std)*100, gl=r.l==null?null:(r.l-r.std)*100;
+    return `<tr><td class="l">${r.label}</td><td>${r.hi?'≥ ':'≤ '}${(r.std*100).toFixed(1)}%</td>
+      <td class="${stc(r.stL)}">${pctCell(r.l,r.dp)}</td><td class="${stc(r.stL)}">${gl==null?'–':sgn(gl,r.dp)}</td>
+      <td><b class="${stc(r.st)}">${pctCell(r.m,r.dp)}</b></td><td class="${stc(r.st)}">${sgn(gm,r.dp)}</td>
+      <td class="l"><span class="dot ${r.st}"></span></td></tr>`}).join('')}
+  </table></div>`;
+}
+function wlBlock(title,w){
+  if(!w.items.length) return '';
+  const cnt=w.items.filter(i=>i.st!=='n'), okN=cnt.filter(i=>i.st!=='r').length;
+  const f1=v=>Math.abs(v)>=100?n0(v):n1(v);
+  return `<div class="card"><h3>${title} <span style="float:right;text-transform:none;letter-spacing:0" class="${okN===cnt.length?'good':'bad'}">${cnt.length-okN} off standard</span></h3>
+  <table><tr><th class="l">Item</th><th>Std (MTD)</th><th>Actual</th><th>Gap</th><th>${dlabel(w.last)} std</th><th>${dlabel(w.last)} act.</th><th></th></tr>
+  ${w.items.map(i=>{ const g=i.m-i.std;
+    return `<tr><td class="l">${i.label}</td><td>${f1(i.std)}</td><td><b class="${stc(i.st)}">${f1(i.m)}</b></td><td class="${stc(i.st)}">${sgn(g,1)}</td>
+      <td>${i.l==null?'–':f1(i.ls)}</td><td class="${stc(i.stL)}">${i.l==null?'–':f1(i.l)}</td><td class="l"><span class="dot ${i.st}"></span></td></tr>`}).join('')}
+  </table></div>`;
+}
+RENDER.sva = ()=>{
+  const wsplit=(a)=>[a.creel,a.drafter,a.cutter];
+  $('s-sva').innerHTML = `
+  <div class="note" style="margin-top:0">Green = on standard, amber = within 1.5% of it, red = outside. Breakdown hours are shown for information and not counted. “${dlabel(last)}” is the latest day with complete production data; month to date covers ${elapsed} days. Waste standards are set in the script CONFIG (creel ${pct(S.creel,1)}, drafter ${pct(S.drafter,1)}, cutter ${pct(S.cutter,1)} of production).</div>
+  <div class="grid g2">${svaBlock('BlueOcean (Cotsyn)',rowsBO,last)}${svaBlock('Eco',rowsEC,last)}</div>
+  <h2>Drawline waste split · creel / drafter / cutter</h2>
+  <div class="grid g2">
+    <div class="card"><h3>BlueOcean · ${n0(sum(wsplit(mBO)))} kg this month</h3><div class="chd"><canvas id="v1"></canvas></div></div>
+    <div class="card"><h3>Eco · ${n0(sum(wsplit(mEC)))} kg this month</h3><div class="chd"><canvas id="v2"></canvas></div></div>
+  </div>
+  <h2>Washline</h2>
+  <div class="grid g2">${wlBlock('Washline 1 (Natural)',W1)}${wlBlock('Washline 2 (Multi)',W2)}</div>`;
+  const wp=(id,a)=>{ const wn=['Creel','Drafter','Cutter']; pie(id,wn,wsplit(a).map(v=>+v.toFixed(0)),['#2b7bb9','#d97706','#334155'],{center:n0((a.creel+a.drafter+a.cutter)/1000)+' t',sub:'waste',tip:c=>wn[c.dataIndex]+': '+n2(a.prod>0?(c.parsed/a.prod*100):0)+'% of production'}); };
+  wp('v1',mBO); wp('v2',mEC);
+};
+
+/* ================= PRODUCTION ================= */
+RENDER.production = ()=>{
+  const dtB=['dtP','dtE','dtM','dtU'].map(k=>mBO[k]+mEC[k]);
+  const eW=mEC.white/1000, eK=Math.max(0,prodEC-eW);   // white = columns tagged White/Off White; black = all other Eco columns
+  const ecoDisp={White:0,Black:0,Other:0}; disp.filter(r=>r.plant==='Eco').forEach(r=>{const q=(r.quality||'').toLowerCase(); (q.indexOf('black')>=0?ecoDisp.Black+=r.qty/1000:(q.indexOf('white')>=0?ecoDisp.White+=r.qty/1000:ecoDisp.Other+=r.qty/1000));});
+  $('s-production').innerHTML = `
+  <div class="grid g3">
+    <div class="card"><h3>BlueOcean · production</h3><div class="big">${n0(prodBO)}<small>t</small></div><div class="d">Charging ${n0(mBO.ch/1000)} t · avg ${n1(prodBO/elapsed)} t/day</div><div class="d">Yield <b class="${cls(yBO-STD.yield)}">${pct(yBO)}</b> · A-grade <b class="${cls(mBO.A/mBO.prod-STD.A)}">${pct(mBO.A/mBO.prod)}</b></div></div>
+    <div class="card"><h3>Eco · production</h3><div class="big">${n0(prodEC)}<small>t</small></div><div class="d">Charging ${n0(mEC.ch/1000)} t · avg ${n1(prodEC/elapsed)} t/day</div><div class="d">Yield <b class="${cls(yEC-STD.yield)}">${pct(yEC)}</b> · A-grade <b class="${cls(mEC.A/mEC.prod-STD.A)}">${pct(mEC.A/mEC.prod)}</b></div></div>
+    <div class="card"><h3>Plant share</h3><div class="chd" style="height:140px"><canvas id="p0"></canvas></div></div>
+  </div>
+  <h2>Daily production (t) · drawline</h2>
+  ${(()=>{const g=(m,d,k)=>((m[d]||{})[k]||0)/1000, mx=Math.max(...days.map(d=>g(dBO,d,'total')+g(dEC,d,'total')));
+    return dailyBlock(days,['BO A','BO B','Eco A','Eco B','Total'],d=>`<td>${n1(g(dBO,d,'A'))}</td><td class="mut">${n1(g(dBO,d,'B'))}</td><td>${n1(g(dEC,d,'A'))}</td><td class="mut">${n1(g(dEC,d,'B'))}</td>${barTd(g(dBO,d,'total')+g(dEC,d,'total'),mx,'#bfdbfe')}`,()=>`<td>${n0(mBO.A/1000)}</td><td>${n0(mBO.B/1000)}</td><td>${n0(mEC.A/1000)}</td><td>${n0(mEC.B/1000)}</td><td>${n0(prodAll)}</td>`,last)+`<div class="sub">BO = BlueOcean. A and B grade tonnes per day from the drawline sheets; Total = A + B of both plants. Average ${n1(prodAll/elapsed)} t/day over ${elapsed} days · highlighted row = latest day (${dsh(last)}).</div>`;})()}
+  <h2>Grade mix</h2>
+  <div class="grid g2">
+    <div class="card"><h3>BlueOcean · A / B grade</h3><div class="chd"><canvas id="p1"></canvas></div></div>
+    <div class="card"><h3>Eco · A / B grade</h3><div class="chd"><canvas id="p2"></canvas></div></div>
+  </div>
+  <h2>Eco · white and black</h2>
+  <div class="grid g2">
+    <div class="card"><h3>Eco production by colour (t)</h3><div class="chd"><canvas id="p3"></canvas></div>
+      <div class="sub">White = drawline columns tagged White / Off White. Black = all other Eco columns (the plant's regular black production).</div></div>
+    <div class="card"><h3>Eco dispatch by colour (t)</h3><div class="chd"><canvas id="p4"></canvas></div>
+      <div class="sub">Actual dispatch quality as per Dispatch sheet (cancelled / advance lines excluded).</div></div>
+  </div>
+  <h2>Drawline downtime</h2>
+  <div class="grid g2">
+    <div class="card"><h3>By category · both plants (min)</h3><div class="chd"><canvas id="p5"></canvas></div></div>
+    <div class="card"><h3>Total logged</h3><div class="big">${n0(sum(dtB))}<small>min</small></div><div class="d">BlueOcean ${n0(mBO.dtP+mBO.dtE+mBO.dtM+mBO.dtU)} · Eco ${n0(mEC.dtP+mEC.dtE+mEC.dtM+mEC.dtU)} min</div>
+      <div class="d mut" style="margin-top:6px">Process / Electrical / Mechanical / Utility as logged in the Production Backup sheet.</div></div>
+  </div>`;
+  pie('p0',['BlueOcean','Eco'],[+prodBO.toFixed(1),+prodEC.toFixed(1)],[C.bo,C.eco],{center:n0(prodAll),sub:'tonnes',tip:c=>c.label+' '+n1(c.parsed/(prodBO+prodEC)*100)+'%'});
+  const ab=(id,a)=>pie(id,['A-grade','B-grade'],[+(a.A/1000).toFixed(1),+(a.B/1000).toFixed(1)],[C.good,'#d97706'],{center:pct(a.A/a.prod),sub:'A-grade'});
+  ab('p1',mBO); ab('p2',mEC);
+  pie('p3',['White / Off White','Black'],[+eW.toFixed(1),+eK.toFixed(1)],['#94a3b8','#14212e'],{center:n0(prodEC)+' t',sub:'Eco'});
+  pie('p4',['White / Off White','Black','Other'],[+ecoDisp.White.toFixed(1),+ecoDisp.Black.toFixed(1),+ecoDisp.Other.toFixed(1)],['#94a3b8','#14212e','#e2e8f0'],{center:n0(ecoDisp.White+ecoDisp.Black+ecoDisp.Other)+' t',sub:'dispatched'});
+  { const dtN=['Process','Electrical','Mechanical','Utility'], dtT=sum(dtB)||1;
+    pie('p5',dtN.map((k,i)=>k+' · '+n0(dtB[i]/dtT*100)+'%'),dtB,['#94a3b8','#d97706','#c0392b','#2b7bb9'],{center:n0(sum(dtB)),sub:'min',tip:c=>dtN[c.dataIndex]+': '+n1(c.parsed/dtT*100)+'% of downtime · '+n0(c.parsed)+' min'}); }
+};
+
+
+/* ================= STOCK ================= */
+RENDER.stock = ()=>{
+  const st=D.stock, coal=D.coal||[], rm=D.rm||[], fl=D.flake||[], bt=D.bottle||[], ds=D.dsum||[];
+  const fg=[['BlueOcean','A-grade',st.bo_A],['BlueOcean','B-grade',st.bo_B],['Eco','A-grade',st.eco_A],['Eco','B-grade',st.eco_B]].filter(x=>x[2]&&x[2].length>=4);
+  const fgClose=x=>x[2][3];
+  const fgTot=sum(fg,fgClose), fgBO=sum(fg.filter(x=>x[0]==='BlueOcean'),fgClose), fgEC=sum(fg.filter(x=>x[0]==='Eco'),fgClose);
+  const coalOnly=coal.filter(c=>/coal/i.test(c.unit)), coalTot=sum(coalOnly,c=>c.closing);
+  const minDays=coalOnly.filter(c=>c.avgDay>0).reduce((m,c)=>Math.min(m,c.days),1e9);
+  const dayCls=d=>d<5?'bad':d<10?'amb':'good';
+  const avgRate=dispV*1e5/(dispT*1000);
+  const flBad=fl.filter(r=>r.flag).concat(bt.filter(r=>r.flag));
+  const flTotal=(fl.find(r=>r.plant==='BlueOcean'&&r.item.toLowerCase()==='total')||{closing:0}).closing+(fl.find(r=>r.plant==='Eco'&&r.item.toLowerCase()==='total')||{closing:0}).closing;
+  const btTotal=(bt.find(r=>r.item.toLowerCase()==='total')||{closing:0}).closing;
+  const rmGroup=(plant)=>{ const a=rm.filter(r=>r.plant===plant&&r.kg>0), t=sum(a,r=>r.kg); const main=a.filter(r=>r.kg/t>=0.025).sort((x,y)=>y.kg-x.kg); const oth=t-sum(main,r=>r.kg); return {t:t,items:main.map(r=>[r.item+' · '+pct(r.kg/t,1),r.kg]).concat(oth>0?[['Others · '+pct(oth/t,1),oth]]:[])}; };
+  const rmBO=rmGroup('BlueOcean'), rmEC=rmGroup('Eco');
+  const byQ=(plant)=>{ const m={}; disp.filter(r=>r.plant===plant).forEach(r=>{const k=r.quality||'—'; (m[k]=m[k]||{t:0,v:0}); m[k].t+=r.qty/1000; m[k].v+=r.value/1e5;}); return Object.entries(m).sort((a,b)=>b[1].t-a[1].t); };
+  const qTable=(title,plant)=>{ const rows=byQ(plant), T=sum(rows,r=>r[1].t), V=sum(rows,r=>r[1].v);
+    return `<div class="card"><h3>${title}</h3><table><tr><th class="l">Quality / colour</th><th>Tonnes</th><th>₹ lakh</th><th>Avg ₹/kg</th></tr>
+    ${rows.map(([k,v])=>`<tr><td class="l">${k}</td><td>${n1(v.t)}</td><td>${n1(v.v)}</td><td><b>${n1(v.v*1e5/(v.t*1000))}</b></td></tr>`).join('')}
+    <tr style="font-weight:700"><td class="l">Total</td><td>${n1(T)}</td><td>${n1(V)}</td><td>${T>0?n1(V*1e5/(T*1000)):'–'}</td></tr></table></div>`; };
+  const flTable=(plant)=>{ const rows=fl.filter(r=>r.plant===plant); if(!rows.length) return ''; const bo=plant==='BlueOcean';
+    return `<div class="card"><h3>${plant} · flake stock (t)</h3><table><tr><th class="l">Material</th><th>Opening</th><th>Receipt</th><th>Consumption</th><th>Closing</th>${bo?'<th>Incl. U2</th>':''}</tr>
+    ${rows.map(r=>`<tr${r.item.toLowerCase()==='total'?' style="font-weight:700"':''}><td class="l">${r.item}</td><td>${n1(r.opening)}</td><td>${r.receipt?n1(r.receipt):'–'}</td><td>${r.consumption?n1(r.consumption):'–'}</td><td class="${r.flag?'bad':''}"><b>${r.flag==='error'?'#REF!':n1(r.closing)}</b></td>${bo?`<td>${n1(r.total)}</td>`:''}</tr>`).join('')}</table>${bo?'<div class="sub" style="margin-top:6px">Closing = stock at Unit 3. "Incl. U2" adds stock transferred to Unit 2.</div>':'<div class="sub" style="margin-top:6px">Eco receipts include transfer from Unit 3.</div>'}</div>`; };
+  const btTable=()=>{ if(!bt.length) return '';
+    return `<div class="card"><h3>Bottle stock (t)</h3><table><tr><th class="l">Material</th><th>Opening</th><th>Receiving</th><th>Consumed</th><th>Sold</th><th>Closing</th></tr>
+    ${bt.map(r=>{const tot=r.line==='Total'; return `<tr${tot?' style="font-weight:700"':''}><td class="l">${r.item}</td><td>${n1(r.opening)}</td><td>${n1(r.receiving)}</td><td>${n1(r.consume)}</td><td>${r.sold?n1(r.sold):'–'}</td><td class="${r.flag?'bad':''}"><b>${r.flag==='error'?'#REF!':n1(r.closing)}</b></td></tr>`}).join('')}</table></div>`; };
+  $('s-stock').innerHTML = `
+  <div class="grid g4">
+    <div class="card"><h3>Finished goods stock</h3><div class="big">${n0(fgTot)}<small>t</small></div><div class="d">BlueOcean ${n0(fgBO)} t · Eco ${n0(fgEC)} t</div><div class="d mut">A + B grade, closing (DashBoard sheet)</div></div>
+    <div class="card"><h3>Coal stock</h3><div class="big">${n0(coalTot)}<small>t</small></div><div class="d">${coalOnly.map(c=>c.unit.replace(/ - Coal/,'').replace(/Unit - 2/,'Unit 2')+' '+n0(c.closing)+' t').join(' · ')}</div>${minDays<1e9?`<div class="d ${dayCls(minDays)}">Lowest cover ${n1(minDays)} days</div>`:''}</div>
+    <div class="card"><h3>Dispatch rate · ${ds.length?ds[0].month:'this month'}</h3><div class="big">₹ ${n1(ds.length?ds[0].rate:avgRate)}<small>/kg</small></div><div class="d">${ds.length?`Freight ₹ ${n2(ds[0].freightKg)}/kg · ${n0(ds[0].perDay)} t/day`:''}</div></div>
+    <div class="card"><h3>Bottle &amp; flake stock</h3><div class="big">${n0(flTotal+btTotal)}<small>t</small></div><div class="d">Flake ${n0(flTotal)} t · Bottle ${n0(btTotal)} t</div>${flBad.length?`<div class="d bad">${flBad.length} line(s) need correction in the sheet</div>`:`<div class="d mut">Washline Dashboard${D.meta.stockDate?' · '+D.meta.stockDate:''}</div>`}</div>
+  </div>
+
+  <h2>Finished goods stock (t)</h2>
+  <div class="grid g2">
+    <div class="card"><table><tr><th class="l">Plant · grade</th><th>Opening</th><th>Production</th><th>Dispatch</th><th>Closing</th><th>On hold</th></tr>
+      ${fg.map(x=>`<tr><td class="l">${x[0]} · ${x[1]}</td><td>${n1(x[2][0])}</td><td>${n1(x[2][1])}</td><td>${n1(x[2][2])}</td><td><b>${n1(x[2][3])}</b></td><td>${x[2].length>4&&x[2][4]>0?`<b class="bad">${n1(x[2][4])}</b>`:'<span class="mut">–</span>'}</td></tr>`).join('')}
+      <tr style="font-weight:700"><td class="l">Total</td><td>${n1(sum(fg,x=>x[2][0]))}</td><td>${n1(sum(fg,x=>x[2][1]))}</td><td>${n1(sum(fg,x=>x[2][2]))}</td><td>${n1(fgTot)}</td><td></td></tr></table></div>
+    <div class="card"><h3>Closing stock by plant &amp; grade</h3><div class="chd"><canvas id="k1"></canvas></div></div>
+  </div>
+
+  <h2>Coal &amp; pellet stock${D.meta.coalDate?` · as on ${D.meta.coalDate}`:''}</h2>
+  ${coal.length?`<div class="grid g2">
+    <div class="card"><table><tr><th class="l">Unit</th><th>Closing t</th><th>Received t</th><th>Used t</th><th>Avg / day t</th><th>Days cover</th></tr>
+      ${coal.map(c=>{const used=c.thermo+c.boiler5+c.boiler6+c.boiler1; return `<tr><td class="l">${c.unit}</td><td><b>${n1(c.closing)}</b></td><td>${n1(c.received)}</td><td>${n1(used)}</td><td>${n1(c.avgDay)}</td><td class="${c.avgDay>0?dayCls(c.days):'mut'}"><b>${c.avgDay>0?n1(c.days):'–'}</b></td></tr>`}).join('')}</table>
+      <div class="sub" style="margin-top:6px">Days cover = closing stock ÷ average daily use. Red under 5 days, amber under 10. BlueOcean closing is after coal-stone sold. Opening of BlueOcean coal is negative in the sheet.</div></div>
+    <div class="card"><h3>Closing stock by unit (t)</h3><div class="chd"><canvas id="k2"></canvas></div></div>
+  </div>`:'<div class="card">Coal sheet not available. Check COAL_ID in the script.</div>'}
+
+  <h2>RM mixing · % of charging this month</h2>
+  <div class="grid g2">
+    <div class="card"><h3>BlueOcean · RM mixing %</h3><div class="chd t"><canvas id="k3"></canvas></div></div>
+    <div class="card"><h3>Eco · RM mixing %</h3><div class="chd t"><canvas id="k4"></canvas></div></div>
+  </div>
+
+  <h2>Bottle &amp; flake stock${D.meta.stockDate?` · as on ${D.meta.stockDate}`:''}</h2>
+  ${flBad.length?`<div class="note">⚠ Check the Washline Dashboard sheet: ${flBad.map(r=>(r.plant||r.line)+' · '+r.item+(r.flag==='error'?' (#REF! error)':' (negative closing)')).join('; ')}.</div>`:''}
+  ${fl.length?`<div class="grid g2">${flTable('BlueOcean')}${flTable('Eco')}</div>`:'<div class="card">No flake stock lines found on the Washline Dashboard tab.</div>'}
+  ${bt.length?`<div class="grid g2">${btTable()}<div class="card"><h3>Bottle &amp; flake · closing stock (t)</h3><div class="chd"><canvas id="k5"></canvas></div></div></div>`:''}
+
+  <h2>Dispatch per kg · overall summary F.Y. 2026-27</h2>
+  ${ds.length?`<div class="card"><table><tr><th class="l">Month</th><th>Production t</th><th>Dispatch t</th><th>Sale value ₹ lakh</th><th>Freight ₹ lakh</th><th>Avg sale rate ₹/kg</th><th>Avg freight ₹/kg</th><th>Avg dispatch t/day</th></tr>
+    ${ds.map((r,i)=>{const tot=/^(current|year)/i.test(r.month); return `<tr${tot?' style="font-weight:700;background:var(--bg2,#f3f6fa)"':''}><td class="l">${r.month}</td><td>${n0(r.prod)}</td><td>${n0(r.disp)}</td><td>${n0(r.value)}</td><td>${n1(r.freight)}</td><td><b>${n1(r.rate)}</b></td><td>${n2(r.freightKg)}</td><td>${n1(r.perDay)}</td></tr>`}).join('')}</table>
+    <div class="sub" style="margin-top:6px">From the DashBoard sheet of the Production Backup.</div></div>`:'<div class="card">Overall Dispatch Summary table not found on the DashBoard sheet.</div>'}
+
+  <h2>This month by quality</h2>
+  <div class="grid g2">${qTable('Cotsyn (BlueOcean)','Cotsyn')}${qTable('Eco','Eco')}</div>`;
+  const cc=['#0f4c75','#2b7bb9','#0e7490','#64748b','#94a3b8','#d97706','#7c3aed','#cbd5e1'];
+  pie('k1',fg.map(x=>x[0]+' '+x[1]),fg.map(x=>+fgClose(x).toFixed(1)),['#2b7bb9','#94c3e6','#334155','#94a3b8'],{center:n0(fgTot)+' t',sub:'closing'});
+  if(coal.length) pie('k2',coal.filter(c=>c.closing>0).map(c=>c.unit),coal.filter(c=>c.closing>0).map(c=>+c.closing.toFixed(1)),cc,{center:n0(sum(coal,c=>c.closing>0?c.closing:0)),sub:'tonnes'});
+  if(rmBO.items.length) pie('k3',rmBO.items.map(r=>r[0]),rmBO.items.map(r=>+(r[1]/1000).toFixed(1)),null,{center:'100%',sub:'RM mix'});
+  if(rmEC.items.length) pie('k4',rmEC.items.map(r=>r[0]),rmEC.items.map(r=>+(r[1]/1000).toFixed(1)),null,{center:'100%',sub:'RM mix'});
+  if(bt.length){ const tl=(pl)=>(fl.find(r=>r.plant===pl&&r.item.toLowerCase()==='total')||{closing:0}).closing; const l1=(bt.find(r=>r.item.toLowerCase()==='total line-1')||{closing:0}).closing, l2=(bt.find(r=>r.item.toLowerCase()==='total line-2')||{closing:0}).closing;
+    pie('k5',['BlueOcean flake','Eco flake','Bottle · Line 1','Bottle · Line 2'],[+tl('BlueOcean').toFixed(1),+tl('Eco').toFixed(1),+l1.toFixed(1),+l2.toFixed(1)],null,{center:n0(flTotal+btTotal)+' t',sub:'closing'}); }
+};
+
+
+/* ================= DENSIFIER ================= */
+RENDER.densifier = ()=>{
+  const dn=D.dens||[], dd=D.densDay||[];
+  const T=kg=>kg/1000, sec=k=>dn.filter(r=>r.section===k);
+  const raw=sec('rawlump'), fg=sec('fglump'), pop=sec('pop'), pow=sec('powder'), rm=sec('rm');
+  if(!dn.length){ $('s-densifier').innerHTML='<div class="card">Densifier workbook not available. Check the Densifier notice at the top of the page.</div>'; return; }
+  const prod=sum(fg,r=>r.inn), cons=sum(raw,r=>r.out), recv=sum(raw,r=>r.inn), issued=sum(fg,r=>r.out), eco=sum(fg,r=>r.eco)+sum(pop,r=>r.eco);
+  const fgClose=sum(fg,r=>r.closing), rawClose=sum(raw,r=>r.closing), popClose=sum(pop,r=>r.closing);
+  const lastD=dd.length?dd[dd.length-1].date:'';
+  const tbl=(heads,rows,fn,tot)=>`<table><tr><th class="l">${heads[0]}</th>${heads.slice(1).map(h=>'<th>'+h+'</th>').join('')}</tr>${rows.map(fn).join('')}${tot?`<tr class="tot">${tot}</tr>`:''}</table>`;
+  const c=(v)=>`<td>${n1(T(v))}</td>`;
+  $('s-densifier').innerHTML = `
+  <div class="grid g4">
+    <div class="card"><h3>Lump produced · month</h3><div class="big">${n0(T(prod))}<small>t</small></div><div class="d">From ${n0(T(cons))} t consumed · yield <b>${pct(prod/cons,1)}</b></div></div>
+    <div class="card"><h3>Raw lump received</h3><div class="big">${n0(T(recv))}<small>t</small></div><div class="d">Consumed ${n0(T(cons))} t · closing <b>${n1(T(rawClose))} t</b></div></div>
+    <div class="card"><h3>Issued to spinning</h3><div class="big">${n0(T(issued))}<small>t</small></div><div class="d">Lump issued · of which to Eco (lump + popcorn) ${n0(T(eco))} t</div></div>
+    <div class="card"><h3>FG stock</h3><div class="big">${n0(T(fgClose+popClose))}<small>t</small></div><div class="d">Lump ${n0(T(fgClose))} t · Popcorn ${n0(T(popClose))} t</div></div>
+  </div>
+
+  <h2>Raw lump · input (t)</h2>
+  <div class="grid g2">
+    <div class="card">${tbl(['Material','Opening','Received','Consumed','Closing'],raw,r=>`<tr><td class="l">${r.item}</td>${c(r.opening)}${c(r.inn)}${c(r.out)}${c(r.closing,1)}</tr>`,`<td class="l">Total</td>${c(sum(raw,r=>r.opening))}${c(recv)}${c(cons)}${c(rawClose,1)}`)}</div>
+    <div class="card"><h3>Lump produced by type (t)</h3><div class="chd" style="height:190px"><canvas id="dn1"></canvas></div></div>
+  </div>
+
+  <h2>Finished lump · output (t)</h2>
+  <div class="card">${tbl(['Lump','Opening','Production','Issued to spinning','of which Eco','Closing'],fg,r=>`<tr><td class="l">${r.item}</td>${c(r.opening)}${c(r.inn)}${c(r.out)}<td>${r.eco?n1(T(r.eco)):'–'}</td>${c(r.closing,1)}</tr>`,`<td class="l">Total</td>${c(sum(fg,r=>r.opening))}${c(prod)}${c(issued)}<td>${n1(T(sum(fg,r=>r.eco)))}</td>${c(fgClose,1)}`)}</div>
+
+  <h2>Popcorn &amp; powder (t)</h2>
+  <div class="grid g2">
+    <div class="card"><h3>Finished popcorn</h3>${tbl(['Item','Opening','Production','Issued','of which Eco','Closing'],pop,r=>`<tr><td class="l">${r.item}</td>${c(r.opening)}${c(r.inn)}${c(r.out)}<td>${r.eco?n1(T(r.eco)):'–'}</td>${c(r.closing,1)}</tr>`)}</div>
+    <div class="card"><h3>Powder stock</h3>${tbl(['Item','Opening','Production','Issued','Closing'],pow,r=>`<tr><td class="l">${r.item}</td>${c(r.opening)}${c(r.inn)}${c(r.out)}${c(r.closing,1)}</tr>`)}</div>
+  </div>
+
+  <h2>Wiry / film raw material (t)</h2>
+  <div class="card">${tbl(['Material','Opening','Received','Consumed','Closing'],rm,r=>`<tr><td class="l">${r.item}</td>${c(r.opening)}${c(r.inn)}${c(r.out)}${c(r.closing,1)}</tr>`)}</div>
+
+  <h2>Daily · lump (t)</h2>
+  ${dd.length?(()=>{ const mx=Math.max(...dd.map(r=>r.prod)); const m={}; dd.forEach(r=>m[r.date]=r);
+    return dailyBlock(dd.map(r=>r.date),['Received','Consumed','Produced','Yield %','Issued to spinning'],d=>{const r=m[d]; return `<td>${n1(T(r.recv))}</td><td>${n1(T(r.cons))}</td>${barTd(T(r.prod),T(mx),'#fde68a')}<td>${r.cons>0?n1(r.prod/r.cons*100):'–'}</td><td>${n1(T(r.issued))}</td>`},()=>`<td>${n0(T(recv))}</td><td>${n0(T(cons))}</td><td>${n0(T(prod))}</td><td>${n1(prod/cons*100)}</td><td>${n0(T(issued))}</td>`,lastD)+`<div class="sub">All lump types together. Received = raw lump received, Consumed = raw lump fed to the densifier, Produced = finished lump. Highlighted row = latest day (${dsh(lastD)}).</div>`; })():''}`;
+  pie('dn1',fg.map(r=>r.item),fg.map(r=>+T(r.inn).toFixed(1)),['#0f4c75','#2b7bb9','#94a3b8','#14212e'],{center:n0(T(prod))+' t',sub:'produced'});
+};
+
+/* ================= EXPENSES ================= */
+let EXM=0;   // selected month number (0 = latest with data)
+RENDER.expenses = ()=>{
+  const X=D.expenses||[];
+  if(!X.length){ $('s-expenses').innerHTML='<div class="card">Expenses data will appear after the next data refresh (it runs every hour).</div>'; return; }
+  const METS=[['electrical','Electrical expenses',1],['mechanical','Mechanical expenses',1],['maintenance','Maintenance',1],['forklift','Forklift diesel',0],['power','Power (MPEB)',0]];
+  const PL=[['BlueOcean',C.bo],['Eco',C.eco]];
+  const months=[...new Set(X.map(r=>r.month))].sort((a,b)=>a-b);
+  const MN=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  if(!months.includes(EXM)) EXM=months[months.length-1];
+  const get=(m,pl,mo)=>X.find(r=>r.metric===m&&r.plant===pl&&r.month===mo);
+  const pk=r=>r&&r.prod>0?r.actual/r.prod:null;
+  const rk=v=>v==null?'–':(v<1?v.toFixed(3):n2(v));
+  const prevM=months.filter(x=>x<EXM).pop();
+  const MJ=D.expMajor||[];
+  const majOf=(m,pl,mo)=>MJ.filter(r=>r.metric===m&&r.plant===pl&&r.month===mo);
+  const short=t=>t.length>38?t.slice(0,37)+'…':t;
+  const majTxt=a=>a.slice(0,3).map(r=>short(r.item)+' ('+Lk(r.amount)+')').join(', ')+(a.length>3?' + '+(a.length-3)+' more':'');
+  const cell=(m,pl)=>{
+    const r=get(m,pl,EXM), p=prevM?get(m,pl,prevM):null;
+    if(!r) return `<div class="d mut">No data for ${MN[EXM]}</div>`;
+    const mj=majOf(m,pl,EXM), mjT=sum(mj,x=>x.amount), sub=(m==='electrical'||m==='mechanical')&&mj.length>0;
+    const bv=r.budget>0?r.actual-r.budget:null, k=pk(r), kp=pk(p);
+    const net=r.actual-(sub?mjT:0), explained=sub&&bv!=null&&bv>0&&net<=r.budget;
+    return `<div class="big" style="font-size:22px">${Lk(r.actual)}</div>
+      ${bv==null?'':`<div class="d">Budget ${Lk(r.budget)} · <b class="${bv>0?(explained?'amb':'bad'):'good'}">${bv>0?'over by ':'under by '}${Lk(Math.abs(bv))}</b> (${pct(Math.abs(bv)/r.budget,0)})</div>`}
+      ${mj.length?`<div class="d" style="font-size:12.5px">${sub?'Major item':'Capex / one-time (separate)'}: ${majTxt(mj)}</div>`:''}
+      ${sub&&r.budget>0?`<div class="d" style="font-size:12.5px">Excluding major item${mj.length>1?'s':''}: <b>${Lk(net)}</b> · <b class="${net>r.budget?'bad':'good'}">${net>r.budget?'over by ':'within budget by '}${Lk(Math.abs(net-r.budget))}</b></div>`:''}
+      <div class="d">₹ <b>${rk(k)}</b> per kg${kp!=null&&k!=null?` · <span class="${k>kp*1.02?'bad':k<kp*0.98?'good':'mut'}">${k>kp?'▲':'▼'} vs ${MN[prevM]} ${rk(kp)}</span>`:''}</div>
+      ${r.qty>0?`<div class="d mut">${m==='forklift'?n0(r.qty)+' litres · '+n2(r.qty/(r.prod/1000))+' L per tonne':n0(r.qty)+' kWh · '+n2(r.qty/r.prod)+' units per kg'}</div>`:''}`;
+  };
+  const card=(m,t)=>`<div class="card"><h3>${t}</h3><div class="grid g2" style="gap:14px">${PL.map(([pl])=>`<div><div class="sub" style="font-weight:700;margin-bottom:2px">${pl}</div>${cell(m,pl)}</div>`).join('')}</div></div>`;
+  const tbl=(m,pl)=>{
+    const rows=months.map(mo=>get(m,pl,mo)).filter(Boolean), hasB=rows.some(r=>r.budget>0), hasM=rows.some(r=>majOf(m,pl,r.month).length>0);
+    if(!rows.length) return '';
+    const T=sum(rows,r=>r.actual), TB=sum(rows,r=>r.budget), TP=sum(rows,r=>r.prod);
+    return `<div class="card"><h3>${pl}</h3><table><tr><th class="l">Month</th>${hasB?'<th>Budget</th>':''}<th>Actual</th>${hasB?'<th>Over / under</th>':''}<th>₹ / kg</th>${hasM?'<th class="l">Remark · major item</th>':''}</tr>
+      ${rows.map(r=>`<tr${r.month===EXM?' class="cur"':''}><td class="l">${MN[r.month]}</td>${hasB?`<td>${r.budget>0?Lk(r.budget):'–'}</td>`:''}<td><b>${Lk(r.actual)}</b></td>${hasB?`<td class="${r.budget>0?(r.actual>r.budget?'bad':'good'):'mut'}">${r.budget>0?(r.actual>r.budget?'+':'-')+Lk(Math.abs(r.actual-r.budget)):'–'}</td>`:''}<td>${rk(pk(r))}</td>${hasM?`<td class="l" style="font-size:12px;white-space:normal;min-width:150px">${(()=>{ const a=majOf(m,pl,r.month); return a.length?majTxt(a):''; })()}</td>`:''}</tr>`).join('')}
+      <tr class="tot"><td class="l">Total</td>${hasB?`<td>${TB>0?Lk(TB):'–'}</td>`:''}<td>${Lk(T)}</td>${hasB?`<td>${TB>0?(T>TB?'+':'-')+Lk(Math.abs(T-TB)):'–'}</td>`:''}<td>${TP>0?rk(T/TP):'–'}</td>${hasM?'<td></td>':''}</tr></table></div>`; };
+  $('s-expenses').innerHTML=`
+  <div class="daybar"><div class="dl">Month</div><select id="exSel">${months.slice().reverse().map(m=>`<option value="${m}"${m===EXM?' selected':''}>${MN[m]}</option>`).join('')}</select><span class="sub">Figures are as entered in the Expenses Analysis sheet. Cost per kg = expense ÷ production of that month.</span></div>
+  <div class="grid g2">${METS.map(([m,t])=>card(m,t)).join('')}</div>
+  <h2>₹ per kg · month-wise trend</h2>
+  <div class="grid g2">${METS.map(([m,t])=>`<div class="card"><h3>${t}</h3><div class="chd" style="height:190px"><canvas id="xc_${m}"></canvas></div></div>`).join('')}</div>
+  ${METS.map(([m,t])=>`<h2>${t} · month-wise</h2><div class="grid g2">${tbl(m,'BlueOcean')}${tbl(m,'Eco')}</div>`).join('')}`;
+  $('exSel').onchange=e=>{ EXM=Number(e.target.value); built.expenses=false; RENDER.expenses(); built.expenses=true; };
+  METS.forEach(([m])=>{
+    const sets=PL.map(([pl,col])=>({label:pl,data:months.map(mo=>{ const k=pk(get(m,pl,mo)); return k==null?null:+k.toFixed(3); }),borderColor:col,backgroundColor:col,tension:.25,spanGaps:true})).filter(d=>d.data.some(x=>x!=null));
+    if(!sets.length) return;
+    mk('xc_'+m,{type:'line',data:{labels:months.map(mo=>MN[mo]),datasets:sets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:sets.length>1,labels:{boxWidth:10}}},scales:{x:{grid:{display:false}},y:{grid:{color:Chart.defaults.borderColor}}}}});
+  });
+};
+/* ================= ACCOUNTS ================= */
+RENDER.accounts = ()=>{
+  const pc=D.accPetty||[], bk=D.accBank||[];
+  if(!pc.length && !bk.length){ $('s-accounts').innerHTML='<div class="card">Accounts data not available yet. Check the Accounts notice at the top of the page.</div>'; return; }
+  const L=v=>{ const a=Math.abs(v), sg=v<0?'-':''; return a>=1e7?sg+n2(a/1e7)+' Cr':(a>=1e5?sg+n2(a/1e5)+' L':sg+n0(a)); };
+  const cell=v=>v?n0(v):'–';
+  const pcLast=pc[pc.length-1], pcRec=sum(pc,r=>r.received), pcExp=sum(pc,r=>r.expenses);
+  // bank: latest entry per account
+  const accts=[...new Set(bk.map(r=>r.acct))];
+  const lastOf=a=>{ const x=bk.filter(r=>r.acct===a); return x[x.length-1]; };
+  const accRows=accts.map(a=>{ const x=bk.filter(r=>r.acct===a), l=x[x.length-1]; return {acct:a,name:l.name,type:l.type,asOn:l.date,closing:l.closing,diff:l.diff,rec:sum(x,r=>r.received),pay:sum(x,r=>r.payment),chg:sum(x,r=>r.charges),n:x.length}; })
+    .filter(r=>r.n>=2).sort((a,b)=>(a.name+a.type).localeCompare(b.name+b.type));
+  const ca=accRows.filter(r=>r.type==='CA'), cc=accRows.filter(r=>r.type==='CC');
+  const bkLast=bk.length?bk[bk.length-1].date:'';
+  const bkDates=[...new Set(bk.map(r=>r.date))].sort();
+  const dayAgg={}; bkDates.forEach(d=>{ const x=bk.filter(r=>r.date===d); dayAgg[d]={rec:sum(x,r=>r.received),pay:sum(x,r=>r.payment),chg:sum(x,r=>r.charges)}; });
+  const pcDates=pc.map(r=>r.date), pcm=byDate(pc);
+  $('s-accounts').innerHTML = `
+  <div class="grid g4">
+    <div class="card"><h3>Petty cash balance</h3><div class="big">₹ ${n0(pcLast?pcLast.closing:0)}</div><div class="d">As on ${pcLast?dfull(pcLast.date):'–'}</div></div>
+    <div class="card"><h3>Petty cash · month</h3><div class="big">₹ ${L(pcExp)}<small>spent</small></div><div class="d">Received ₹ ${L(pcRec)}</div></div>
+    <div class="card"><h3>Current a/c balance</h3><div class="big">₹ ${L(sum(ca,r=>r.closing))}</div><div class="d">${ca.length} current account${ca.length===1?'':'s'}</div></div>
+    <div class="card"><h3>Cash credit (CC) utilised</h3><div class="big">₹ ${L(-sum(cc,r=>r.closing))}</div><div class="d">Total drawn across ${cc.length} CC accounts</div></div>
+  </div>
+
+  <h2>Bank balances · as per books</h2>
+  <div class="card"><table><tr><th class="l">Company</th><th>A/c no.</th><th>Type</th><th>As on</th><th>Closing balance (₹)</th><th>Received · month</th><th>Paid · month</th><th>Bank charges</th><th>Book vs bank diff.</th></tr>
+  ${accRows.map(r=>`<tr><td class="l">${r.name}</td><td>${r.acct}</td><td>${r.type}</td><td>${dsh(r.asOn)}</td><td><b>${n0(r.closing)}</b></td><td>${L(r.rec)}</td><td>${L(r.pay)}</td><td>${r.chg?n0(r.chg):'–'}</td><td>${Math.abs(r.diff)>=1?`<span class="bad">${n0(r.diff)}</span>`:'<span class="good">Matched</span>'}</td></tr>`).join('')}
+  </table><div class="sub">Closing balance is the book balance from the latest reconciliation entry. A negative balance on a CC account means the limit is drawn. The last column shows any difference left unreconciled on that day.</div></div>
+
+  <h2>Daily bank movement · all accounts</h2>
+  ${dailyBlock(bkDates,['Received','Paid','Net','Bank charges'],d=>{const a=dayAgg[d]; return `<td>${L(a.rec)}</td><td>${L(a.pay)}</td><td class="${cls(a.rec-a.pay)}">${L(a.rec-a.pay)}</td><td>${a.chg?n0(a.chg):'–'}</td>`;},()=>{const r=sum(bkDates,d=>dayAgg[d].rec),p=sum(bkDates,d=>dayAgg[d].pay); return `<td>${L(r)}</td><td>${L(p)}</td><td>${L(r-p)}</td><td>${n0(sum(bkDates,d=>dayAgg[d].chg))}</td>`;},bkLast)}
+
+  <h2>Petty cash · daily (₹)</h2>
+  ${dailyBlock(pcDates,['Opening','Received','Expenses','Closing'],d=>{const r=pcm[d]; return `<td>${n0(r.opening)}</td><td>${cell(r.received)}</td><td>${cell(r.expenses)}</td><td><b>${n0(r.closing)}</b></td>`;},()=>`<td>${n0(pc[0].opening)}</td><td>${n0(pcRec)}</td><td>${n0(pcExp)}</td><td>${n0(pcLast.closing)}</td>`,pcLast.date)}`;
+};
+/* ================= DISPATCH ================= */
+RENDER.dispatch = ()=>{
+  const grp=(key)=>{const m={};disp.forEach(r=>{const k=r[key]||'—';(m[k]=m[k]||{t:0,v:0,n:0});m[k].t+=r.qty/1000;m[k].v+=r.value/1e5;m[k].n++});return Object.entries(m).sort((a,b)=>b[1].t-a[1].t);};
+  const parties=grp('party');
+  const pl={Cotsyn:{t:0,v:0},Eco:{t:0,v:0}};disp.forEach(r=>{pl[r.plant].t+=r.qty/1000;pl[r.plant].v+=r.value/1e5});
+  const canc=D.dispatch.filter(r=>r.plant==='cancel'), adv=D.dispatch.filter(r=>r.plant==='advance');
+  const top10=parties.slice(0,10), topShare=sum(top10,x=>x[1].t)/dispT;
+  // aggregate by a key: qty (kg), value (Rs), freight (Rs) and the kg that carried freight
+  const title=t=>t.toLowerCase().replace(/\b\w/g,c=>c.toUpperCase());
+  const agg=(keyFn,nameFn)=>{const m={};disp.forEach(r=>{const k=keyFn(r); if(!k) return; const o=(m[k]=m[k]||{name:nameFn?nameFn(r):k,q:0,v:0,f:0,fq:0}); o.q+=r.qty;o.v+=r.value; if(r.freight>0){o.f+=r.freight;o.fq+=r.qty}}); return Object.values(m);};
+  const nk=t=>String(t||'').toUpperCase().replace(/\s+/g,' ').trim();
+  const byParty=agg(r=>nk(r.party),r=>r.party), byState=agg(r=>r.state), byDest=agg(r=>nk(r.place),r=>title(nk(r.place))), byTr=agg(r=>nk(r.transporter),r=>r.transporter), byGeo=agg(r=>r.geo);
+  const rate=o=>o.q>0?o.v/o.q:0, fr=o=>o.fq>0?o.f/o.fq:null;
+  const top=(arr,fn,n)=>arr.slice().sort((a,b)=>fn(b)-fn(a)).slice(0,n);
+  const cut=t=>t.length>30?t.slice(0,29)+'…':t;
+  const col={qty:['Qty t',o=>n1(o.q/1000)],amt:['Sale value ₹ lakh',o=>n1(o.v/1e5)],rate:['Avg rate ₹/kg',o=>`<b>${n1(rate(o))}</b>`],fr:['Freight ₹/kg',o=>fr(o)==null?'–':n2(fr(o))],fra:['Freight ₹ lakh',o=>n1(o.f/1e5)]};
+  const T=(ttl,label,rows,cs,sub)=>`<div class="card"><h3>${ttl}</h3><table><tr><th class="l">${label}</th>${cs.map(c=>'<th>'+col[c][0]+'</th>').join('')}</tr>${rows.map(o=>`<tr><td class="l" title="${o.name}">${cut(o.name)}</td>${cs.map(c=>'<td>'+col[c][1](o)+'</td>').join('')}</tr>`).join('')}</table>${sub?`<div class="sub" style="margin-top:6px">${sub}</div>`:''}</div>`;
+  const geoRows=['Domestic','Export'].map(g=>byGeo.find(o=>o.name===g)||{name:g,q:0,v:0,f:0,fq:0});
+  const tot={name:'Total',q:sum(byGeo,o=>o.q),v:sum(byGeo,o=>o.v),f:sum(byGeo,o=>o.f),fq:sum(byGeo,o=>o.fq)};
+  const big=byParty.filter(o=>o.q>10000);
+  const dm={};disp.forEach(r=>{const o=(dm[r.date]=dm[r.date]||{C:0,E:0,V:0});(r.plant==='Cotsyn'?o.C+=r.qty/1000:o.E+=r.qty/1000);o.V+=r.value/1e5});
+  const lastD=dispDays[dispDays.length-1];
+  const SL={}; (D.sales||[]).forEach(r=>{SL[r.metric]=r.value});
+  const salesBlock = (D.sales&&D.sales.length) ? `
+  <h2>Sales orders</h2>
+  <div class="grid g4">
+    <div class="card"><h3>Total orders</h3><div class="big">${n0(SL.orders||0)}</div><div class="d">${n0(SL.items||0)} order items · ${n0(SL.openItems||0)} still open</div></div>
+    <div class="card"><h3>Dispatched</h3><div class="big">${n0((SL.dispQty||0)/1000)}<small>t</small></div><div class="d">of ${n0((SL.orderQty||0)/1000)} t ordered · ${n0(SL.invoices||0)} invoices</div></div>
+    <div class="card"><h3>Invoice amount</h3><div class="big">${n1((SL.invoice||0)/1e5)}<small>lakh</small></div><div class="d">as per Sales Tracker</div></div>
+    <div class="card"><h3>Balance qty</h3><div class="big">${n0((SL.balanceQty||0)/1000)}<small>t</small></div><div class="d">${(SL.orderQty||0)>0?pct((SL.balanceQty||0)/SL.orderQty,0):'–'} of ordered qty still to dispatch</div></div>
+  </div>` : '';
+  const sp=(D.salesParty||[]).filter(r=>r.orders>0||r.dispQty>0), si=D.salesItems||[];
+  const sx=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  const itemsOf={}; si.forEach(r=>{(itemsOf[r.party.toLowerCase().replace(/\s+/g,' ')]=itemsOf[r.party.toLowerCase().replace(/\s+/g,' ')]||[]).push(r)});
+  const partyBlock = sp.length ? `
+  <h2>Party-wise orders</h2>
+  <div class="card"><div style="overflow-x:auto"><table><tr><th class="l">Party <span style="font-weight:400;opacity:.6">(tap a party to see its items)</span></th><th>Orders</th><th>Ordered t</th><th>Dispatched t</th><th>Balance t</th><th>Invoice ₹ lakh</th><th>Outstanding ₹ lakh</th></tr>
+  ${sp.map(r=>{const its=itemsOf[r.party.toLowerCase().replace(/\s+/g,' ')]||[];
+    return `<tr style="cursor:pointer" onclick="var n=this.nextElementSibling;n.style.display=n.style.display==='none'?'table-row':'none'"><td class="l">▸ ${sx(r.party)}</td><td>${n0(r.orders)}</td><td>${n1(r.orderQty/1000)}</td><td>${n1(r.dispQty/1000)}</td><td><b>${n1(r.balanceQty/1000)}</b></td><td>${r.invAmt>0?n1(r.invAmt/1e5):'–'}</td><td>${r.invAmt-r.received>1?n1((r.invAmt-r.received)/1e5):'–'}</td></tr>
+    <tr style="display:none"><td colspan="7" style="padding:4px 0 10px 14px;background:#f6f9fc"><table><tr><th class="l">Order</th><th class="l">Material (denier x length)</th><th class="l">Colour</th><th class="l">Grade</th><th class="l">Broker</th><th>Qty t</th><th>Rate ₹/kg</th><th>Dispatched t</th><th>Balance t</th></tr>
+    ${its.map(i=>`<tr><td class="l">${sx(i.orderNo)}<div style="font-size:11px;opacity:.6">${sx(i.date)}</div></td><td class="l">${sx(i.material)}</td><td class="l">${sx(i.color)}</td><td class="l">${sx(i.grade)}</td><td class="l">${sx(i.broker)||'–'}</td><td>${n1(i.qty/1000)}</td><td>${n1(i.rate)}</td><td>${n1(i.dispQty/1000)}</td><td><b>${n1(i.balanceQty/1000)}</b></td></tr>`).join('')}</table></td></tr>`}).join('')}
+  <tr><td class="l"><b>Total</b></td><td><b>${n0(sp.reduce((s,r)=>s+r.orders,0))}</b></td><td><b>${n1(sp.reduce((s,r)=>s+r.orderQty,0)/1000)}</b></td><td><b>${n1(sp.reduce((s,r)=>s+r.dispQty,0)/1000)}</b></td><td><b>${n1(sp.reduce((s,r)=>s+r.balanceQty,0)/1000)}</b></td><td><b>${n1(sp.reduce((s,r)=>s+r.invAmt,0)/1e5)}</b></td><td><b>${n1(sp.reduce((s,r)=>s+Math.max(0,r.invAmt-r.received),0)/1e5)}</b></td></tr></table></div>
+  <div class="sub">${sp.length} parties · sorted by balance quantity (largest first) · Outstanding = invoice amount less payment received, as per Sales Tracker.</div></div>` : '';
+  const mg={}; si.forEach(i=>{const k=[i.material,i.color,i.grade].join('|'); const o=(mg[k]=mg[k]||{material:i.material,color:i.color,grade:i.grade,n:0,qty:0,disp:0,bal:0,rv:0}); o.n++; o.qty+=i.qty; o.disp+=i.dispQty; o.bal+=i.balanceQty; o.rv+=i.rate*i.qty});
+  const ml=Object.keys(mg).map(k=>mg[k]).sort((x,y)=>y.bal-x.bal);
+  const matBlock = ml.length ? `
+  <h2>Material-wise orders (denier · colour · grade)</h2>
+  <div class="card"><div style="overflow-x:auto"><table><tr><th class="l">Material (denier x length)</th><th class="l">Colour</th><th class="l">Grade</th><th>Orders</th><th>Ordered t</th><th>Dispatched t</th><th>Balance t</th><th>Avg rate ₹/kg</th></tr>
+  ${ml.map(o=>`<tr><td class="l">${sx(o.material)}</td><td class="l">${sx(o.color)}</td><td class="l">${sx(o.grade)}</td><td>${n0(o.n)}</td><td>${n1(o.qty/1000)}</td><td>${n1(o.disp/1000)}</td><td><b>${n1(o.bal/1000)}</b></td><td>${o.qty>0?n1(o.rv/o.qty):'–'}</td></tr>`).join('')}</table></div>
+  <div class="sub">Average rate is weighted by ordered quantity · sorted by balance quantity.</div></div>` : '';
+  $('s-dispatch').innerHTML = salesBlock + `
+  <h2>Dispatch</h2>
+  <div class="grid g4">
+    <div class="card"><h3>Total dispatch</h3><div class="big">${n0(dispT)}<small>t</small></div><div class="d">₹ ${n1(dispV)} lakh · ${disp.length} invoices</div></div>
+    <div class="card"><h3>Cotsyn (BlueOcean)</h3><div class="big">${n0(pl.Cotsyn.t)}<small>t</small></div><div class="d">₹ ${n1(pl.Cotsyn.v)} lakh · avg ₹ ${n1(pl.Cotsyn.v*1e5/(pl.Cotsyn.t*1000))}/kg</div></div>
+    <div class="card"><h3>Eco</h3><div class="big">${n0(pl.Eco.t)}<small>t</small></div><div class="d">₹ ${n1(pl.Eco.v)} lakh · avg ₹ ${n1(pl.Eco.v*1e5/(pl.Eco.t*1000))}/kg</div></div>
+    <div class="card"><h3>Customer concentration</h3><div class="big">${pct(topShare,0)}<small>top 10</small></div><div class="d">${parties.length} parties · ${byDest.length} destinations</div></div>
+  </div>
+
+  <h2>Daily dispatch (t)</h2>
+  ${dailyBlock(dispDays,['Cotsyn','Eco','Total','₹ lakh','Avg sale rate ₹/kg'],d=>{const o=dm[d],t=o.C+o.E;return `<td>${n1(o.C)}</td><td>${n1(o.E)}</td><td>${n1(t)}</td><td>${n1(o.V)}</td><td>${t>0?n1(o.V*100/t):'–'}</td>`},()=>`<td>${n0(pl.Cotsyn.t)}</td><td>${n0(pl.Eco.t)}</td><td>${n0(dispT)}</td><td>${n0(dispV)}</td><td>${n1(dispV*100/dispT)}</td>`,lastD)}
+  <div class="sub">Average ${n1(dispT/dispDays.length)} t/day over ${dispDays.length} days · highlighted row = latest day (${dsh(lastD)}).</div>
+
+  <h2>Geography · Domestic &amp; Export</h2>
+  <div class="grid g2">
+    ${T('Domestic vs Export','Geography',geoRows.concat([tot]),['qty','amt','rate','fr'])}
+    ${T('Top 5 transporters · freight per kg','Transporter',top(byTr.filter(o=>o.name),o=>o.q,5),['qty','fra','fr'],'Freight ₹/kg = freight ÷ quantity of the invoices that carry freight. Ranked by quantity carried.')}
+  </div>
+
+  <h2>Top 5 parties</h2>
+  <div class="grid g2">
+    ${T('By quantity','Party',top(byParty,o=>o.q,5),['qty','amt','rate'])}
+    ${T('By sale value','Party',top(byParty,o=>o.v,5),['qty','amt','rate'])}
+  </div>
+
+  <h2>Avg rate · parties buying more than 10 t</h2>
+  <div class="grid g2">
+    ${T('Highest avg rate','Party',top(big,o=>rate(o),5),['qty','amt','rate'])}
+    ${T('Lowest avg rate','Party',top(big,o=>-rate(o),5),['qty','amt','rate'])}
+  </div>
+
+  <h2>Top 5 states &amp; destinations</h2>
+  <div class="grid g2">
+    ${T('States','State',top(byState.filter(o=>o.name!=='Export'),o=>o.q,5),['qty','amt','rate','fr'],'State is mapped from the place name (list in the script; unmapped places show as Other).')}
+    ${T('Destinations','Destination',top(byDest.filter(o=>!/export/i.test(o.name)),o=>o.q,5),['qty','amt','rate','fr'])}
+  </div>
+  <div class="note">Cancelled invoices (${canc.length} lines, ${n1(sum(canc,r=>r.qty)/1000)} t) and advance-billed lines (${adv.length} lines, ${n1(sum(adv,r=>r.qty)/1000)} t) are excluded, so totals match the Dispatch summary on the Production Backup dashboard.</div>`;
+  const dl=Math.max(1,dispDays.length), plQ={Cotsyn:pl.Cotsyn.t, Eco:pl.Eco.t};
+  const stk=D.stock||{}, cl=(x,i)=>(x&&x[i])||0;
+  const stkP={Cotsyn:cl(stk.bo_A,3)+cl(stk.bo_B,3), Eco:cl(stk.eco_A,3)+cl(stk.eco_B,3)};
+  const balP={Cotsyn:0,Eco:0}; si.forEach(i=>{ balP[/black/i.test(i.color)?'Eco':'Cotsyn']+=i.balanceQty/1000; });
+  const coverRows=[['Cotsyn','BlueOcean (white / off-white)'],['Eco','Eco (black)']].map(([k,l])=>{
+    const dd=plQ[k]/dl, st=stkP[k], bl=balP[k];
+    return `<tr><td class="l">${l}</td><td>${n0(st)}</td><td>${n0(bl)}</td><td class="${st>=bl?'good':'bad'}">${bl>0?pct(st/bl,0):'–'}</td><td>${n1(dd)}</td><td>${dd>0?n0(st/dd):'–'}</td><td>${dd>0?n0(bl/dd):'–'}</td></tr>`;}).join('');
+  const coverBlock = si.length ? `
+  <h2>Order cover (stock vs balance orders)</h2>
+  <div class="card"><div style="overflow-x:auto"><table><tr><th class="l">Plant</th><th>FG stock t</th><th>Balance orders t</th><th>Stock vs orders</th><th>Dispatch t/day</th><th>Stock cover (days)</th><th>Orders cover (days)</th></tr>${coverRows}</table></div>
+  <div class="sub">FG stock = A + B grade closing stock (Stock tab). Balance orders = unfilled quantity in the Sales Tracker; black orders are counted for Eco, all other colours for BlueOcean. Days use this month's average dispatch per day.</div></div>` : '';
+  $('s-dispatch').insertAdjacentHTML('beforeend', coverBlock + partyBlock + matBlock);
+};
+
+/* ================= ELECTRICITY ================= */
+RENDER.electrical = ()=>{
+  const E=D.elec||[], el=$('s-electrical');
+  if(!E.length){ el.innerHTML='<div class="card">No electrical consumption data for this month yet.</div>'; return; }
+  const order=['BlueOcean|Washline 1','BlueOcean|Washline 2','BlueOcean|Dencyfire','BlueOcean|Spinning','BlueOcean|Drawline','Eco|Spinning','Eco|Drawline'];
+  const g={}; E.forEach(r=>{const k=r.plant+'|'+r.dept; const o=(g[k]=g[k]||{plant:r.plant,dept:r.dept,prod:0,std:0,act:0,v:0,n:0}); o.prod+=r.prod; o.std+=r.stdUnits; o.act+=r.actUnits; o.v+=r.variance; o.n++;});
+  const rows=Object.keys(g).sort((x,y)=>(order.indexOf(x)<0?99:order.indexOf(x))-(order.indexOf(y)<0?99:order.indexOf(y))).map(k=>g[k]);
+  const tStd=sum(rows,r=>r.std), tAct=sum(rows,r=>r.act), tV=tAct-tStd;
+  const dm={}; E.forEach(r=>{const o=(dm[r.date]=dm[r.date]||{std:0,act:0}); o.std+=r.stdUnits; o.act+=r.actUnits;});
+  const days=Object.keys(dm).sort(), last=days[days.length-1];
+  const vc=v=>v<=0?'good':'bad';
+  el.innerHTML=`
+  <div class="grid g4">
+    <div class="card"><h3>Actual units</h3><div class="big">${n0(tAct)}</div><div class="d">${days.length} days · ${n0(tAct/days.length)} units/day</div></div>
+    <div class="card"><h3>Standard units</h3><div class="big">${n0(tStd)}</div><div class="d">as per standard consumption per tonne</div></div>
+    <div class="card"><h3>Variance</h3><div class="big ${vc(tV)}">${tV>0?'+':''}${n0(tV)}</div><div class="d">${tStd>0?(tV>0?'over':'saving')+' '+pct(Math.abs(tV)/tStd,1)+' vs standard':''}</div></div>
+    <div class="card"><h3>Latest day</h3><div class="big">${n0(dm[last].act)}</div><div class="d">${dfull(last)} · std ${n0(dm[last].std)}</div></div>
+  </div>
+  <h2>Department-wise (month so far)</h2>
+  <div class="card"><div style="overflow-x:auto"><table><tr><th class="l">Plant · department</th><th>Production t</th><th>Std units/t</th><th>Actual units/t</th><th>Std units</th><th>Actual units</th><th>Variance</th><th>Var %</th></tr>
+  ${rows.map(r=>`<tr><td class="l">${r.plant} · ${r.dept}</td><td>${n1(r.prod/1000)}</td><td>${r.prod>0?n1(r.std/(r.prod/1000)):'–'}</td><td>${r.prod>0?n1(r.act/(r.prod/1000)):'–'}</td><td>${n0(r.std)}</td><td>${n0(r.act)}</td><td class="${vc(r.act-r.std)}">${r.act-r.std>0?'+':''}${n0(r.act-r.std)}</td><td class="${vc(r.act-r.std)}">${r.std>0?sgn((r.act-r.std)/r.std*100,1)+'%':'–'}</td></tr>`).join('')}
+  <tr><td class="l"><b>Total</b></td><td></td><td></td><td></td><td><b>${n0(tStd)}</b></td><td><b>${n0(tAct)}</b></td><td class="${vc(tV)}"><b>${tV>0?'+':''}${n0(tV)}</b></td><td class="${vc(tV)}"><b>${tStd>0?sgn(tV/tStd*100,1)+'%':'–'}</b></td></tr></table></div>
+  <div class="sub">Source: NOV ELECTRICAL CONSUMPTION file. Negative variance = less electricity than standard (good).</div></div>
+  <h2>Daily units (all departments)</h2>
+  <div class="card"><div style="overflow-x:auto"><table><tr><th class="l">Date</th><th>Standard units</th><th>Actual units</th><th>Variance</th></tr>
+  ${days.slice().reverse().map(d=>{const o=dm[d],v=o.act-o.std; return `<tr${d===last?' style="background:#eef6ff"':''}><td class="l">${dfull(d)}</td><td>${n0(o.std)}</td><td>${n0(o.act)}</td><td class="${vc(v)}">${v>0?'+':''}${n0(v)}</td></tr>`}).join('')}</table></div></div>`;
+};
+
+/* ================= COMPARE MONTHS ================= */
+const CMP={};
+RENDER.compare = ()=>{
+  const el=$('s-compare'), ms=(window.MONTHS&&MONTHS.list)||[];
+  if(ms.length<2){ el.innerHTML='<div class="card">Only one month is available to compare.</div>'; return; }
+  const opt=(sel)=>ms.map(m=>`<option value="${m.key}"${m.key===sel?' selected':''}>${m.label.replace(' (live)','')}</option>`).join('');
+  el.innerHTML=`<div class="card" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><b>Compare</b>
+    <select id="cmpA" style="padding:6px;border-radius:8px">${opt(ms[1].key)}</select> <b>with</b>
+    <select id="cmpB" style="padding:6px;border-radius:8px">${opt(ms[0].key)}</select></div><div id="cmpOut"><div class="card" style="text-align:center;color:var(--muted)">Loading…</div></div>`;
+  const run=()=>{ const a=$('cmpA').value, b=$('cmpB').value; $('cmpOut').innerHTML='<div class="card" style="text-align:center;color:var(--muted)">Loading…</div>';
+    Promise.all([cmpLoad(a),cmpLoad(b)]).then(([x,y])=>{ $('cmpOut').innerHTML=cmpTable(x,y,ms.find(m=>m.key===a).label.replace(' (live)',''),ms.find(m=>m.key===b).label.replace(' (live)','')); })
+    .catch(()=>{ $('cmpOut').innerHTML='<div class="card">Could not load the months. Please try again.</div>'; }); };
+  $('cmpA').onchange=run; $('cmpB').onchange=run; run();
+};
+function cmpLoad(key){
+  if(CMP[key]) return Promise.resolve(CMP[key]);
+  return call({act:'data',email:ls2g('bo_em'),token:ls2g('bo_tok'),month:key}).then(r=>{ if(!r||!r.ok) throw new Error('x'); CMP[key]=cmpSum(r.data); return CMP[key]; });
+}
+function cmpSum(d){
+  const S=(arr,f)=>(arr||[]).reduce((s,x)=>s+(+(f(x))||0),0);
+  const days=new Set([].concat(d.draw_bo||[],d.draw_eco||[]).filter(r=>r.total>0).map(r=>r.date)).size||1;
+  const pbo=S(d.draw_bo,r=>r.total)/1000, pec=S(d.draw_eco,r=>r.total)/1000;
+  const cbo=S(d.spin_bo,r=>r.charging)/1000, cec=S(d.spin_eco,r=>r.charging)/1000;
+  const A=S(d.draw_bo,r=>r.A)+S(d.draw_eco,r=>r.A), T=S(d.draw_bo,r=>r.total)+S(d.draw_eco,r=>r.total);
+  const disp=(d.dispatch||[]).filter(r=>r.plant==='Eco'||r.plant==='Cotsyn');
+  const dq=S(disp,r=>r.qty)/1000, dv=S(disp,r=>r.value)/1e5;
+  const ddays=new Set(disp.map(r=>r.date)).size||1;
+  const dt=(S(d.draw_bo,r=>r.dtTotal)+S(d.draw_eco,r=>r.dtTotal))/60;
+  return {days,prod:pbo+pec,pbo,pec,yBO:cbo>0?pbo/cbo:0,yEC:cec>0?pec/cec:0,y:(cbo+cec)>0?(pbo+pec)/(cbo+cec):0,aG:T>0?A/T:0,dq,dv,rate:dq>0?dv*100/dq:0,ddays,dt,month:d.meta&&d.meta.month};
+}
+function cmpTable(x,y,lx,ly){
+  const n0=v=>Number(v).toLocaleString('en-IN',{maximumFractionDigits:0}), n1=v=>Number(v).toLocaleString('en-IN',{minimumFractionDigits:1,maximumFractionDigits:1});
+  const pc=v=>(v*100).toFixed(1)+'%';
+  const chg=(a,b,good)=>{ if(!(a>0)) return '–'; const c=(b-a)/a*100; return `<span class="${(c>=0)===good?'good':'bad'}">${c>0?'+':''}${c.toFixed(1)}%</span>`; };
+  const pts=(a,b,good)=>{ if(!(a>0)||!(b>0)) return '–'; const c=(b-a)*100; return `<span class="${(c>=0)===good?'good':'bad'}">${c>0?'+':''}${c.toFixed(1)} pts</span>`; };
+  const R=(l,f,a,b,ch)=>`<tr><td class="l">${l}</td><td>${f(a)}</td><td>${f(b)}</td><td>${ch}</td></tr>`;
+  const rows=[
+    R('Days with production',n0,x.days,y.days,'–'),
+    R('Production per day (t)',n1,x.prod/x.days,y.prod/y.days,chg(x.prod/x.days,y.prod/y.days,true)),
+    R('BlueOcean production per day (t)',n1,x.pbo/x.days,y.pbo/y.days,chg(x.pbo/x.days,y.pbo/y.days,true)),
+    R('Eco production per day (t)',n1,x.pec/x.days,y.pec/y.days,chg(x.pec/x.days,y.pec/y.days,true)),
+    R('Yield (drawline ÷ charging)',pc,x.y,y.y,pts(x.y,y.y,true)),
+    R('BlueOcean yield',pc,x.yBO,y.yBO,pts(x.yBO,y.yBO,true)),
+    R('Eco yield',pc,x.yEC,y.yEC,pts(x.yEC,y.yEC,true)),
+    R('A-grade share',pc,x.aG,y.aG,pts(x.aG,y.aG,true)),
+    R('Drawline downtime per day (hours)',n1,x.dt/x.days,y.dt/y.days,chg(x.dt/x.days,y.dt/y.days,false)),
+    R('Dispatch per day (t)',n1,x.dq/x.ddays,y.dq/y.ddays,chg(x.dq/x.ddays,y.dq/y.ddays,true)),
+    R('Average sale rate (₹/kg)',n1,x.rate,y.rate,chg(x.rate,y.rate,true)),
+    R('Total production (t)',n0,x.prod,y.prod,'–'),
+    R('Total dispatch (t)',n0,x.dq,y.dq,'–'),
+    R('Sale value (₹ lakh)',n0,x.dv,y.dv,'–')];
+  return `<div class="card"><div style="overflow-x:auto"><table><tr><th class="l">Measure</th><th>${lx}</th><th>${ly}</th><th>Change</th></tr>${rows.join('')}</table></div>
+  <div class="sub">Volumes are compared per day so a part month (such as the current one) is fair against a full month. Totals are shown at the bottom for reference.</div></div>`;
+}
+
+/* ================= WASHLINE ================= */
+const WL_REASONS=[['Power cut / trip',/power|electric|tripp|volt/i],['Steam / boiler',/steam|boiler/i],['Raw material shortage',/raw material|material shortage|no material|bottle/i],['Dryer',/dryer/i],['Label remover / drum',/label|drum/i],['Sorting / sorter',/sort/i],['Pump / motor / conveyor',/pump|motor|conveyor|belt|gear|bearing|screw|cutter/i],['Cleaning / maintenance',/clean|shutdown|maint|weld|chang|repair/i]];
+const reasonOf=t=>{t=t||'';for(const [n,re] of WL_REASONS) if(re.test(t)) return n; return t.trim()?'Other':'No remark';};
+RENDER.washline = ()=>{
+  $('s-washline').innerHTML = `<div class="seg" id="wlseg"><button data-w="1" class="on">Washline 1 (Natural)</button><button data-w="2">Washline 2 (Multi)</button></div><div id="wlbody"></div>`;
+  const draw=(n)=>{
+    charts.filter(c=>c.canvas&&c.canvas.id&&c.canvas.id.startsWith('w')).forEach(c=>{c.destroy();});
+    const rows=n===1?wl1:wl2, w=n===1?W1:W2, run=wlRun(rows), nrun=run.length;
+    const bdRows=run.filter(r=>r.bd>0), rs={};
+    bdRows.forEach(r=>{const k=reasonOf(r.remark); rs[k]=(rs[k]||0)+r.bd;});
+    const rsl=Object.entries(rs).sort((a,b)=>b[1]-a[1]);
+    const dq=run.filter(r=>r.actProd>r.actChg||r.stdProd<=0);
+    const worst=bdRows.slice().sort((a,b)=>b.bd-a.bd).slice(0,5);
+    const g=(i)=>w.items[i];
+    $('wlbody').innerHTML = `
+    <div class="grid g4">
+      <div class="card"><h3>Production vs standard</h3><div class="gc">${dnut('w1')}<div class="tx"><div class="big">${n1(g(0).m)}<small>t</small></div><div class="d">Std ${n1(g(0).std)} t · <b class="${stc(g(0).st)}">${sgn(g(0).m-g(0).std)} t</b></div></div></div></div>
+      <div class="card"><h3>Charging vs standard</h3><div class="gc">${dnut('w2')}<div class="tx"><div class="big">${n1(g(1).m)}<small>t</small></div><div class="d">Std ${n1(g(1).std)} t · <b class="${stc(g(1).st)}">${sgn(g(1).m-g(1).std)} t</b></div></div></div></div>
+      <div class="card"><h3>Manpower / run day</h3><div class="gc">${dnut('w3')}<div class="tx"><div class="big">${n0(g(2).m)}</div><div class="d">Std ${n0(g(2).std)} · <b class="${stc(g(2).st)}">${sgn(g(2).m-g(2).std,0)} per day</b></div></div></div></div>
+      <div class="card"><h3>Breakdown</h3><div class="big">${n1(g(3).m)}<small>hrs</small></div><div class="d">${bdRows.length} of ${nrun} run days · ${rows.filter(r=>!r.run).length} days not run</div></div>
+    </div>
+    <div class="grid g2" style="margin-top:12px">
+      <div class="card"><h3>Breakdown hours by reason</h3>${rsl.length?`<div class="chd"><canvas id="w4"></canvas></div>`:'<div class="sub">No breakdown hours logged.</div>'}</div>
+      <div class="card"><h3>Longest breakdowns</h3>${worst.length?`<table><tr><th class="l">Date</th><th>Hrs</th><th class="l">Remark</th></tr>${worst.map(r=>`<tr><td class="l">${dfull(r.date)}</td><td class="bad">${n1(r.bd)}</td><td class="rm">${r.remark||''}</td></tr>`).join('')}</table>`:'<div class="sub">None.</div>'}</div>
+    </div>
+    ${dq.length?`<div class="note">⚠ Please verify in source: ${dq.map(r=>dlabel(r.date)+(r.stdProd<=0?' (no standard entered)':' (production '+n1(r.actProd)+' t exceeds charging '+n1(r.actChg)+' t)')).join(', ')}. Days without a standard are left out of the standard comparison.</div>`:''}`;
+    gauge('w1',g(0).m/g(0).std,g(0).st,pct(g(0).m/g(0).std,0),'');
+    gauge('w2',g(1).m/g(1).std,g(1).st,pct(g(1).m/g(1).std,0),'');
+    gauge('w3',g(2).m/Math.max(g(2).std,g(2).m,1),g(2).st,pct(g(2).m/g(2).std,0),'');
+    if(rsl.length) pie('w4',rsl.map(r=>r[0]),rsl.map(r=>+r[1].toFixed(1)),null,{center:n1(sum(rsl,r=>r[1])),sub:'hours'});
+  };
+  draw(1);
+  $('wlseg').onclick=e=>{const w=e.target.dataset.w; if(!w) return; [...$('wlseg').children].forEach(b=>b.classList.toggle('on',b===e.target)); draw(+w);};
+};
+
+/* ================= IMPORTS ================= */
+RENDER.imports = ()=>{
+  const im=D.imports||[];
+  if(!im.length){ $('s-imports').innerHTML='<div class="card">No import data found for this month in the Import Lumps FMS.</div>'; return; }
+  const ALERT=0.02;
+  const cnt=r=>String(r.containers||'').split(',').map(x=>x.trim()).filter(Boolean).length;
+  const T=k=>sum(im,r=>r[k]);
+  const inv=T('invQty'), net=T('netWt'), diff=net-inv, charges=T('total'), loads=T('loads'), containers=sum(im,cnt);
+  const dpct=r=>r.invQty>0?(r.netWt-r.invQty)/r.invQty:0;
+  const flagged=im.filter(r=>Math.abs(dpct(r))>ALERT);
+  const shortage=sum(im.filter(r=>r.netWt<r.invQty),r=>r.netWt-r.invQty), excess=sum(im.filter(r=>r.netWt>r.invQty),r=>r.netWt-r.invQty);
+  const pm={}; im.forEach(r=>{const k=r.party||'—'; const o=(pm[k]=pm[k]||{n:0,q:0,w:0,ch:0}); o.n++;o.q+=r.invQty;o.w+=r.netWt;o.ch+=r.total;});
+  const parties=Object.entries(pm).sort((a,b)=>b[1].w-a[1].w);
+  const cats=[['Shipping',r=>r.shipping+r.shippingGst],['Customs',r=>r.customs+r.customsGst],['CONCOR',r=>r.concor+r.concorGst],['Transportation',r=>r.transport+r.transportGst],['CHA',r=>r.cha+r.chaGst],['Liaisoning',r=>r.liaison],['CPET',r=>r.cpet],['Other',r=>r.other]]
+    .map(([k,f])=>[k,sum(im,f)]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
+  const LS=landedSum(im);
+  const lrow=(r,x)=>`<tr><td class="l">${dsh(r.date)}</td><td class="l">${(r.party||'').replace(/ (PTE|LTD|LLC|FZC|SRL).*$/i,'')}</td><td>${n1(r.netWt)}</td><td>${r.rate?n0(r.rate):'–'}</td><td>${x.fx>0?n2(x.fx):'<span class="amb">pending</span>'}</td><td>${x.mat==null?'–':n2(x.mat/1e5)}</td><td>${n2(x.chg/1e5)}</td><td>${x.tot==null?'–':'<b>'+n2(x.tot/1e5)+'</b>'}</td><td>${x.kg==null?'–':'<b>'+n1(x.kg)+'</b>'}</td></tr>`;
+  const landedHtml=`<h2>Landed cost · ${D.meta.month||'this month'}</h2>
+  <div class="card"><div class="scroll"><table><tr><th class="l">Date</th><th class="l">Party</th><th>Net MT</th><th>Rate $/MT</th><th>Ex. rate ₹</th><th>Material ₹ L</th><th>Charges ₹ L</th><th>Landed ₹ L</th><th>Landed ₹/kg</th></tr>
+    ${im.map((r,i)=>lrow(r,LS.L[i])).join('')}
+    <tr class="tot"><td class="l" colspan="2">Total · ${LS.n} invoices</td><td>${n1(LS.netAll)}</td><td></td><td></td><td>${n2(LS.mat/1e5)}</td><td>${n2(LS.chgAll/1e5)}</td><td>${n2((LS.mat+LS.chgOk)/1e5)}</td><td>${LS.kg==null?'–':n1(LS.kg)}</td></tr></table></div>
+    <div class="sub" style="margin-top:8px">Taken from the Details Import tab of the Import Lumps FMS: material = invoice qty × rate × average exchange rate; charges are without GST (input credit is taken). Landed ₹/kg = (material + charges) ÷ net weight received. Total row covers the ${LS.nOk} invoices that have an exchange rate${LS.nOk<LS.n?'; '+(LS.n-LS.nOk)+' still waiting for it':''}. Charges for all ${LS.n} invoices: ₹ ${n2(LS.chgAll/1e5)} lakh (₹ ${n1(LS.chgKg||0)}/kg).</div></div>`;
+  $('s-imports').innerHTML = `
+  ${landedHtml}
+  <div class="grid g4" style="margin-top:12px">
+    <div class="card"><h3>Invoices received</h3><div class="big">${n0(im.length)}</div><div class="d">${n0(containers)} containers · ${n0(loads)} loads</div></div>
+    <div class="card"><h3>Net weight received</h3><div class="big">${n1(net)}<small>MT</small></div><div class="d">Invoice ${n1(inv)} MT · <b class="${cls(diff)}">${sgn(diff,2)} MT (${sgn(diff/inv*100,2)}%)</b></div></div>
+    <div class="card"><h3>Shortage / excess</h3><div class="d">Shortage <b class="bad">${n1(shortage)} MT</b> · Excess <b class="good">+${n1(excess)} MT</b></div><div class="d">${flagged.length} invoice(s) beyond ±${ALERT*100}%</div></div>
+    <div class="card"><h3>Import charges</h3><div class="big">${n1(charges/1e5)}<small>₹ lakh</small></div><div class="d">₹ ${n0(charges/net)} per MT · import charges, excl. material</div></div>
+  </div>
+  <div class="grid g2" style="margin-top:12px">
+    <div class="card"><h3>Import charges by type (₹ lakh)</h3><div class="chd t"><canvas id="i1"></canvas></div></div>
+    <div class="card"><h3>Net weight by party (MT)</h3><div class="chd t"><canvas id="i2"></canvas></div></div>
+  </div>
+  ${flagged.length?`<h2>Invoices beyond ±${ALERT*100}% weight difference</h2><div class="card"><table><tr><th class="l">Date</th><th class="l">Invoice</th><th class="l">Party</th><th>Invoice qty MT</th><th>Net wt MT</th><th>Diff %</th></tr>
+    ${flagged.map(r=>`<tr><td class="l">${dfull(r.date)}</td><td class="l">${r.invoice}</td><td class="l">${r.party}</td><td>${n2(r.invQty)}</td><td>${n2(r.netWt)}</td><td class="${dpct(r)>0?'good':'bad'}">${sgn(dpct(r)*100,2)}%</td></tr>`).join('')}</table></div>`:''}
+  <div class="note">Data from Import Lumps FMS › Details Import (month in that sheet: ${D.meta.importMonth||'n/a'}). Charges include GST lines and exclude the material price.</div>`;
+  pie('i1',cats.map(c=>c[0]),cats.map(c=>+(c[1]/1e5).toFixed(2)),null,{center:n1(charges/1e5),sub:'₹ lakh'});
+  pie('i2',parties.map(p=>p[0].length>24?p[0].slice(0,23)+'…':p[0]),parties.map(p=>+p[1].w.toFixed(1)),null,{center:n0(net),sub:'MT'});
+};
+
+$('foot').innerHTML = `Sources: Monthly PRODUCTION BOOK (spinning, drawline, dispatch) · Sales Tracker · Electrical consumption file · Washline production Daily Reports (Monday Report, flake &amp; bottle stock) · Import Lumps FMS · Coal Purchase FMS · Densifier (Dencyfire) workbook. Standards: yield ${pct(STD.yield,0)}, A-grade ${pct(STD.A,1)}, usable waste ${pct(S.usable,1)}, non-usable ${pct(S.nonUsable,1)}, creel ${pct(S.creel,1)}, drafter ${pct(S.drafter,1)}, cutter ${pct(S.cutter,1)}; washline standards as per Monday Report. ${D.meta.month} target ${n0(TARGET_T)} t.`;
+show('home');
+}
+function dec(x){ if(!x) return null; return JSON.parse(new TextDecoder('utf-8').decode(Uint8Array.from(atob(x),function(c){ return c.charCodeAt(0); }))); }
+const API='https://script.google.com/macros/s/AKfycby3ciJfR9tCV0wxj4m4JLpcrNtnzxg0ZmlkAjlX2Wd9DArL5i1aiiqKqjcEtdFTOHKYxg/exec';
+function ls2g(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function ls2s(k,v){ try{ if(v===null) localStorage.removeItem(k); else localStorage.setItem(k,v); }catch(e){} }
+function call(o){
+  return fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(o),redirect:'follow'})
+    .then(function(r){ return r.json(); });
+}
+const NETERR='Could not connect. Please check the internet and try again.';
+function setBusy(btn,on,label){ btn.disabled=on; if(label) btn.textContent=on?'Please wait...':label; }
+function setupMonths(months,month){
+  var sel=$('mSel'), arc=$('arcBar');
+  if(!months||!months.list||months.list.length<2){ sel.style.display='none'; arc.style.display='none'; return; }
+  sel.innerHTML=''; months.list.forEach(function(m){ var o=document.createElement('option'); o.value=m.key; o.textContent=m.label; if(m.key===month) o.selected=true; sel.appendChild(o); });
+  sel.style.display='inline-block';
+  sel.onchange=function(){ ls2s('bo_month', sel.value===months.current?null:sel.value); location.reload(); };
+  if(month && month!==months.current){
+    var lab=''; months.list.forEach(function(m){ if(m.key===month) lab=m.label; });
+    arc.textContent='Viewing '+lab+' - saved final copy, not live. Choose the live month at the top to go back.'; arc.style.display='block';
+  } else { arc.style.display='none'; }
+}
+function openDash(r){
+  window.MONTHS=r.months||null; window.VIEWMONTH=r.month||(r.months&&r.months.current)||'';
+  $('lock').style.display='none';
+  setupMonths(r.months, r.month||'');
+  boot(r.data);
+}
+function loadData(em,tok,mon){
+  call({act:'data',email:em,token:tok,month:mon||''}).then(function(r){
+    var w=$('lw'); if(w) w.remove();
+    if(r&&r.ok){ openDash(r); }
+    else if(r&&r.expired){ ls2s('bo_tok',null); showLogin(''); }
+    else if(mon){ ls2s('bo_month',null); loadData(em,tok,''); }
+    else { ls2s('bo_tok',null); showLogin((r&&r.msg)||''); }
+  }).catch(function(){ var w=$('lw'); if(w) w.remove(); ls2s('bo_tok',null); showLogin(NETERR); });
+}
+function enter(r,email){
+  ls2s('bo_tok',r.token); ls2s('bo_em',email);
+  var chosen=ls2g('bo_month')||'';
+  if(chosen && r.months && chosen!==r.months.current && chosen!==r.month){ loadData(email,r.token,chosen); }
+  else { openDash(r); }
+}
+function showLogin(msg){
+  $('lsub').style.display=''; $('lock').style.display='flex'; $('fSet').style.display='none'; $('fLogin').style.display='block';
+  $('lerr').textContent=msg||''; var em=ls2g('bo_em'); if(em && !$('lemail').value) $('lemail').value=em;
+}
+$('fLogin').onsubmit=function(ev){
+  ev.preventDefault();
+  var email=$('lemail').value.trim().toLowerCase(), pw=$('lpw').value, b=$('lgo');
+  $('lerr').textContent=''; setBusy(b,true,'Sign in');
+  call({act:'login',email:email,pw:pw}).then(function(r){
+    setBusy(b,false,'Sign in');
+    if(r&&r.ok){ enter(r,email); } else { $('lerr').textContent=(r&&r.msg)||'Could not sign in.'; }
+  }).catch(function(){ setBusy(b,false,'Sign in'); $('lerr').textContent=NETERR; });
+};
+$('lforgot').onclick=function(e){
+  e.preventDefault(); $('fLogin').style.display='none'; $('fSet').style.display='block';
+  $('serr').textContent=''; $('semail').value=$('lemail').value||ls2g('bo_em')||'';
+};
+$('sback').onclick=function(e){ e.preventDefault(); showLogin(''); };
+$('ssend').onclick=function(){
+  var email=$('semail').value.trim().toLowerCase(), b=$('ssend');
+  if(email.indexOf('@')<0){ $('serr').textContent='Enter your work email first.'; return; }
+  $('serr').textContent=''; setBusy(b,true,'Send code to my email');
+  call({act:'code',email:email}).then(function(r){
+    setBusy(b,false,'Send code to my email'); b.textContent='Send code again';
+    $('sinfo').textContent=(r&&r.msg)||'Code sent.'; $('scode').focus();
+  }).catch(function(){ setBusy(b,false,'Send code to my email'); $('serr').textContent=NETERR; });
+};
+$('fSet').onsubmit=function(ev){
+  ev.preventDefault();
+  var email=$('semail').value.trim().toLowerCase(), code=$('scode').value.trim(), p1=$('spw').value, p2=$('spw2').value, b=$('sgo');
+  if(p1!==p2){ $('serr').textContent='The two passwords do not match.'; return; }
+  $('serr').textContent=''; setBusy(b,true,'Save password & continue');
+  call({act:'setpw',email:email,code:code,pw:p1}).then(function(r){
+    setBusy(b,false,'Save password & continue');
+    if(r&&r.ok){ enter(r,email); } else { $('serr').textContent=(r&&r.msg)||'Could not save the password.'; }
+  }).catch(function(){ setBusy(b,false,'Save password & continue'); $('serr').textContent=NETERR; });
+};
+$('bOut').onclick=function(){ ls2s('bo_tok',null); location.reload(); };
+(function start(){
+  var tok=ls2g('bo_tok'), em=ls2g('bo_em');
+  if(tok && em){
+    $('lock').style.display='flex'; $('fLogin').style.display='none'; $('fSet').style.display='none'; $('lsub').style.display='none';
+    $('lockbox').insertAdjacentHTML('beforeend','<div id="lw" class="n" style="font-size:13px;opacity:.8">Loading...</div>');
+    loadData(em,tok,ls2g('bo_month')||'');
+  } else { showLogin(''); }
+})();
+if('serviceWorker' in navigator){ try{ navigator.serviceWorker.register('sw.js'); }catch(e){} }
+</script>
+</body>
+</html>
